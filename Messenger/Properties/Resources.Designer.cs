@@ -250,7 +250,7 @@ namespace Messenger.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à User Icon.
+        ///   Recherche une chaîne localisée semblable à User icon.
         /// </summary>
         internal static string UserIcon {
             get {
@@ -264,6 +264,15 @@ namespace Messenger.Properties {
         internal static string UserName {
             get {
                 return ResourceManager.GetString("UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Version.
+        /// </summary>
+        internal static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
         

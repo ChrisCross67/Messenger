@@ -166,7 +166,7 @@
     <value>User Name</value>
   </data>
   <data name="UserIcon" xml:space="preserve">
-    <value>User Icon</value>
+    <value>User icon</value>
   </data>
   <data name="Encoding" xml:space="preserve">
     <value>Encoding</value>
@@ -185,5 +185,8 @@
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
   </data>
 </root>
