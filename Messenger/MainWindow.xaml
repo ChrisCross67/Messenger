@@ -1,0 +1,320 @@
+﻿<controls:MetroWindow x:Class="Messenger.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:converter="clr-namespace:Messenger.Converters"
+                      xmlns:local="clr-namespace:Messenger"
+                      xmlns:utils="clr-namespace:Messenger.Utils"
+                      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+                      Title="Messenger"
+                      Width="589"
+                      Height="414"
+                      Background="{DynamicResource MaterialDesignPaper}"
+                      Closing="Window_Closing"
+                      FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      Icon="/Messenger;component/Icons/Conference-Call.png"
+                      Loaded="Window_Loaded"
+                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                      WindowStartupLocation="CenterScreen"
+                      WindowTransitionsEnabled="False">
+    <controls:MetroWindow.Resources>
+
+        <x:Array x:Key="MenuItemAttach" Type="{x:Type MenuItem}">
+            <MenuItem Click="buttonAttach_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFile]}" />
+            <MenuItem Click="MenuItemAttachFolder_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFolders]}" />
+            <MenuItem Click="MenuItemClear_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.ClearAll]}" />
+        </x:Array>
+        <Style x:Key="columnHeader" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+        <Style x:Key="toolbarLabel" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <converter:IconConverter x:Key="IconConverter" />
+        <converter:FileIconConverter x:Key="FileIconConverter" />
+        <converter:FileSizeConverter x:Key="FileSizeConverter" />
+        <DataTemplate x:Key="AttachmentItem">
+            <DockPanel LastChildFill="True">
+                <Image Width="16"
+                       Height="16"
+                       Margin="0,0,4,0"
+                       DockPanel.Dock="Left"
+                       Source="{Binding Path=FullPath,
+                                        Converter={StaticResource FileIconConverter}}"
+                       Stretch="UniformToFill" />
+                <utils:ImageButton x:Name="buttonRemove"
+                                   Width="32"
+                                   Height="23"
+                                   Click="buttonRemove_Click"
+                                   DockPanel.Dock="Right"
+                                   Image="/Messenger;component/Icons/remove.png"
+                                   ToolTip="{Binding Source={StaticResource Locator},
+                                                     Path=LocalizationHelper.[Resources.RemoveFromList]}" />
+                <Label Height="23"
+                       HorizontalAlignment="Stretch"
+                       VerticalContentAlignment="Center"
+                       Content="{Binding Name}"
+                       Padding="0" />
+            </DockPanel>
+        </DataTemplate>
+    </controls:MetroWindow.Resources>
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button VerticalAlignment="Center"
+                    Click="buttonRefresh_Click"
+                    Foreground="White"
+                    ToolTip="{Binding Source={StaticResource Locator},
+                                      Path=LocalizationHelper.[Resources.RefreshUsers]}">
+                <Rectangle Width="15"
+                           Height="15"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                          Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill">
+                            <VisualBrush.Visual>
+                                <Path Width="20"
+                                      Height="20"
+                                      Data="M1.1212257,9.3630001L6.5977538,11.580556 4.2506914,12.856734C5.4929478,15.192778 7.9304001,16.795777 10.761055,16.795777 13.75407,16.795777 16.324983,15.014366 17.488389,12.45831L19.643999,12.45831C18.371294,16.144636 14.875176,18.804999 10.761055,18.804999 7.1745365,18.804999 4.0586705,16.782776 2.4753525,13.820294L0,15.164176z M10.760896,0C14.30653,1.3528629E-07,17.389073,1.977851,18.989344,4.8840143L21.333,3.5363943 20.353317,9.3630001 14.824021,7.2771222 17.239375,5.8891636C15.988099,3.5858327 13.567544,2.0091001 10.760896,2.0091001 7.7688711,2.0091001 5.1979985,3.7902967 4.0345705,6.3461806L1.879,6.3461806C3.1517664,2.6600806,6.6478317,1.3528629E-07,10.760896,0z"
+                                      Fill="Red"
+                                      RenderTransformOrigin="0.5,0.5"
+                                      Stretch="Uniform">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="0" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+
+            <Separator />
+            <Button VerticalAlignment="Center"
+                    Click="buttonOption_Click"
+                    Foreground="White"
+                    ToolTip="{Binding Source={StaticResource Locator},
+                                      Path=LocalizationHelper.[Resources.SetupOptions]}">
+                <Rectangle Width="15"
+                           Height="15"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                          Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill">
+                            <VisualBrush.Visual>
+                                <Path Width="20"
+                                      Height="20"
+                                      Data="M13.771,14.295C17.652445,14.295 20.809999,17.453144 20.809999,21.3335 20.809999,25.215055 17.652445,28.372 13.771,28.372L13.771,25.405857C16.017068,25.405857 17.842642,23.578932 17.842641,21.3335 17.842642,19.088068 16.017068,17.261143 13.771,17.261143z M2.2212696,0.21499993L2.6483212,0.21499993 2.9634266,0.21499993 2.9634266,4.4051003C2.9634266,4.7319427,3.2276945,4.9975052,3.55581,4.9975057L7.5973186,4.9975057C7.9254236,4.9975052,8.1910419,4.7319427,8.1910419,4.4051003L8.1910419,0.21499993 8.6428614,0.21499993 8.8030143,0.21499993 8.9319086,0.21499993 11.130999,2.4136236 11.130999,7.0132713 7.8394876,10.266438 7.8290582,10.266438 7.8290582,32.216518 11.106301,35.456142 11.106301,40.05648 8.9084692,42.254997 8.7782354,42.254997 8.618082,42.254997 8.1663227,42.254997 8.1663227,38.065563C8.1663227,37.737362,7.9019847,37.472458,7.5738797,37.472458L3.5323715,37.472458C3.2042656,37.472458,2.9386482,37.737362,2.9386482,38.065563L2.9386482,42.254997 2.6248817,42.254997 2.1991215,42.254997 0,40.05648 0,35.456142 3.2524738,32.202915 3.2759123,32.202915 3.2759123,10.266438 0.023436546,7.0132713 0.023436546,2.4136236z M13.771,0L15.254078,0C16.238466,0,17.034054,0.79694349,17.034054,1.7800471L17.034054,7.0768466C18.655132,7.4479499,20.170711,8.0905266,21.539192,8.9505835L25.290339,5.1998792C25.985729,4.5052323,27.113313,4.5052323,27.807303,5.1998792L29.904873,7.297008C30.600164,7.9915352,30.600164,9.1197758,29.904873,9.8144226L26.153626,13.565228C27.015615,14.933041,27.656304,16.449354,28.0287,18.070469L33.324125,18.070469C34.307211,18.070469,35.104,18.867977,35.104,19.850388L35.104,22.817215C35.104,23.799625,34.307211,24.597132,33.324125,24.597132L28.0287,24.597132C27.656304,26.218346,27.015615,27.733261,26.153626,29.101175L29.904873,32.853107C30.600164,33.547718,30.600164,34.674927,29.904873,35.369534L27.807303,37.467751C27.113313,38.16246,25.985729,38.16246,25.290339,37.467751L21.539192,33.715816C20.170711,34.577126,18.655132,35.220333,17.034054,35.590836L17.034054,40.886986C17.034054,41.870792,16.238466,42.667,15.254078,42.667L13.771,42.667 13.771,35.971039 13.771,34.486523 13.771,33.004208C20.20581,33.004208 25.440136,27.76786 25.440136,21.3335 25.440136,14.89854 20.20581,9.664031 13.771,9.664031L13.771,8.1798277 13.771,6.6972036z"
+                                      Fill="Red"
+                                      RenderTransformOrigin="0.5,0.5"
+                                      Stretch="Uniform">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="0" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button VerticalAlignment="Center"
+                    Click="buttonAbout_Click"
+                    Foreground="White"
+                    ToolTip="{Binding Source={StaticResource Locator},
+                                      Path=LocalizationHelper.[Resources.About]}">
+                <Rectangle Width="15"
+                           Height="15"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                          Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Uniform">
+                            <VisualBrush.Visual>
+                                <Path Width="20"
+                                      Height="20"
+                                      Data="M400.949,269.212C411.685,269.212 420.402,271.884 426.803,277.181 433.834,283.041 437.56,291.149 437.56,300.711 437.56,304.742 437.56,313.226 413.298,394.268 383.11,495.747 375.798,532.871 375.237,545.622 378.304,542.62 391.668,533.48 422.209,504.84L430.9,496.639 463.039,527.997 453.545,536.903C419.134,569.291 394.408,589.586 378.048,598.96 360.612,608.899 346.268,613.774 334.194,613.774 322.29,613.774 312.089,609.648 304.754,601.772 297.558,594.039 293.9,583.683 293.9,570.932 293.9,538.966 312.046,464.626 349.334,343.88 344.155,343.599 334.991,350.771 307.803,377.255L300.021,384.894 264.676,357.52 273.744,347.49C298.917,319.835 322.357,299.821 343.521,287.868 365.718,275.307 384.54,269.212 400.949,269.212z M400.252,132.95C428.055,132.95 450.583,155.499 450.583,183.203 450.583,211.047 428.055,233.5 400.252,233.5 372.423,233.5 349.961,211.047 349.961,183.203 349.961,155.499 372.423,132.95 400.252,132.95z M384.002,75.14C213.374,75.14 75.0918,213.423 75.0918,384.002 75.0918,554.581 213.374,692.861 384.002,692.861 554.53,692.861 692.814,554.581 692.814,384.002 692.814,213.423 554.53,75.14 384.002,75.14z M384.002,0C595.689,0 768,172.266 768,384.002 768,595.736 595.689,768 384.002,768 172.22,768 0,595.736 0,384.002 0,172.266 172.22,0 384.002,0z"
+                                      Fill="Red"
+                                      RenderTransformOrigin="0.5,0.5"
+                                      Stretch="Uniform">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="0" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+
+    <DockPanel Name="dockPanel1" LastChildFill="True">
+        <ToolBar Name="toolBar1"
+                 Height="32"
+                 VerticalAlignment="Top"
+                 DockPanel.Dock="Top">
+            <TextBlock Style="{StaticResource toolbarLabel}" Text="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.NetworkInterface], StringFormat={}{0} :}" />
+            <ComboBox Name="comboBoxNetwork"
+                      Width="120"
+                      Height="28"
+                      DropDownOpened="comboBoxNetwork_DropDownOpened"
+                      SelectionChanged="comboBoxNetwork_SelectionChanged" />
+            <Separator />
+            <TextBlock Style="{StaticResource toolbarLabel}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} : {1}">
+                        <Binding Path="LocalizationHelper.[Resources.NumberOfUsers]" Source="{StaticResource Locator}" />
+                        <Binding ElementName="listViewMembers" Path="Items.Count" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+        </ToolBar>
+        <Grid Name="grid1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" MinHeight="50" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ListView Name="listViewMembers"
+                      Grid.Row="0"
+                      SelectedItem="{Binding Source={x:Static local:MainViewModel.Instance},Path=SelectedMember,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="100"
+                                        Header="{Binding Source={StaticResource Locator},
+                                                         Path=LocalizationHelper.[Resources.User]}"
+                                        HeaderContainerStyle="{StaticResource columnHeader}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Width="16"
+                                               Height="16"
+                                               Margin="0,0,2,0"
+                                               Source="{Binding Path=Icon,
+                                                                Converter={StaticResource IconConverter}}"
+                                               Stretch="UniformToFill" />
+                                        <TextBlock Text="{Binding UserName}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="150"
+                                        DisplayMemberBinding="{Binding MachineName}"
+                                        Header="{Binding Source={StaticResource Locator},
+                                                         Path=LocalizationHelper.[Resources.Machine]}"
+                                        HeaderContainerStyle="{StaticResource columnHeader}" />
+                        <GridViewColumn Width="150"
+                                        DisplayMemberBinding="{Binding IPAddress}"
+                                        Header="{Binding Source={StaticResource Locator},
+                                                         Path=LocalizationHelper.[Resources.IPAddress]}"
+                                        HeaderContainerStyle="{StaticResource columnHeader}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <GridSplitter Name="gridSplitter1"
+                          Grid.Row="1"
+                          HorizontalAlignment="Stretch"
+                          ResizeBehavior="PreviousAndNext" />
+            <Grid Name="grid2"
+                  Grid.Row="2"
+                  VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"
+                                   MinHeight="30"
+                                   MaxHeight="300" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="*" MinHeight="30" />
+                    <RowDefinition Height="30" MinHeight="30" />
+                </Grid.RowDefinitions>
+                <DockPanel Name="attachmentPanel"
+                           Grid.Row="0"
+                           LastChildFill="True">
+                    <controls:DropDownButton Name="DownButton1"
+                                             Margin="5,1,5,1"
+                                             VerticalAlignment="Center"
+                                             Background="#673ab7"
+                                             BorderBrush="{StaticResource PrimaryHueMidBrush}"
+                                             Content="{Binding Source={StaticResource Locator},
+                                                               Path=LocalizationHelper.[Resources.Attach]}"
+                                             DockPanel.Dock="Top"
+                                             Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                             ItemsSource="{Binding Source={StaticResource MenuItemAttach},
+                                                                   Path=.}"
+                                             Padding="4,0,4,0">
+                        <controls:DropDownButton.Icon>
+                            <Path Width="18"
+                                  Height="18"
+                                  Data="M552.043,0.018663C594.104,0.538098 634.535,11.9046 665.628,34.5811 736.78,86.3765 732.29,177.758 655.728,238.569L572.631,304.533 572.831,304.77 359.658,474.043C322.66,503.395 264.776,507.013 230.342,481.985 195.99,456.965 198.074,412.75 235.154,383.344L448.407,213.988 499.877,251.618 286.663,420.929C282.735,424.004 281.814,427.439 281.653,429.674 281.492,431.945 282.173,435.218 285.861,437.891 291.713,442.201 301.775,441.563 308.108,436.536L509.576,276.478 509.377,276.359 604.098,201.061C650.076,164.586 652.801,109.68 610.151,78.6749 567.5,47.5504 495.548,51.8961 449.649,88.4115L111.811,359.876C66.9557,395.594,63.7494,448.706,103.393,480.107L230.143,576.948C272.995,605.999,342.902,601.281,387.917,565.547L699.341,317.42 749.768,355.89 439.427,603.181C364.068,662.911,247.339,670.602,175.828,621.692L175.306,621.997 46.5119,523.562 46.9132,523.285C-20.19,471.049,-14.9384,382.064,60.3022,322.328L398.101,50.8236C441.189,16.6138,497.964,-0.649202,552.043,0.018663z"
+                                  Fill="{StaticResource PrimaryHueMidBrush}"
+                                  Stretch="Uniform" />
+                        </controls:DropDownButton.Icon>
+                    </controls:DropDownButton>
+
+                    <ListBox Name="listBoxAttachmentList"
+                             Margin="1,1,5,1"
+                             AllowDrop="True"
+                             Drop="listBoxAttachmentList_Drop"
+                             ItemTemplate="{StaticResource AttachmentItem}"
+                             SizeChanged="listBoxAttachmentList_SizeChanged" />
+                </DockPanel>
+                <GridSplitter Name="gridSplitter2"
+                              Grid.Row="1"
+                              HorizontalAlignment="Stretch"
+                              ResizeBehavior="PreviousAndNext" />
+                <TextBox Grid.Row="2"
+                         VerticalAlignment="Stretch"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         AutoWordSelection="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Visible"
+                         Text="{Binding Source={x:Static local:MainViewModel.Instance},Path=Message,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                         wpf:TextFieldAssist.Hint="{Binding Source={StaticResource Locator},
+                                                            Path=LocalizationHelper.[Resources.MessageToSend]}" />
+                <StackPanel Name="stackPanel1" Grid.Row="3">
+                    <Button Name="buttonSend"
+                            Height="25"
+                            Margin="4"
+                            Command="{Binding Source={x:Static local:MainViewModel.Instance},Path=SendCommand}"
+                            Content="{Binding Source={StaticResource Locator},
+                                              Path=LocalizationHelper.[Resources.Send]}">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                <Setter Property="IsEnabled" Value="True" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=listViewMembers, Path=SelectedIndex, FallbackValue=-1}" Value="-1">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Source={x:Static local:MainViewModel.Instance},Path=Message.Length, FallbackValue=0}" Value="0">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</controls:MetroWindow>
