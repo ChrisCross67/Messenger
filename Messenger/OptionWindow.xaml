@@ -8,13 +8,11 @@
                       Title="Options"
                       Width="367"
                       Height="319"
-                      Background="{DynamicResource MaterialDesignPaper}"
                       FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       Loaded="Window_Loaded"
                       Padding="5"
                       ShowInTaskbar="False"
-                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                       WindowStartupLocation="CenterOwner"
                       WindowStyle="ToolWindow"
                       WindowTransitionsEnabled="False">

@@ -29,3 +29,4 @@ C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\fr\Messenger.resources.dll
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.exe
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.pdb
+C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Themes\Generic.baml

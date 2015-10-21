@@ -4,31 +4,30 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:converter="clr-namespace:Messenger.Converters"
                       xmlns:local="clr-namespace:Messenger"
+                      xmlns:themes="clr-namespace:Messenger.Themes"
                       xmlns:utils="clr-namespace:Messenger.Utils"
                       xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
                       Title="Messenger"
                       Width="589"
                       Height="414"
-                      Background="{DynamicResource MaterialDesignPaper}"
                       Closing="Window_Closing"
                       FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       Icon="/Messenger;component/Icons/Conference-Call.png"
                       Loaded="Window_Loaded"
-                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                       WindowStartupLocation="CenterScreen"
                       WindowTransitionsEnabled="False">
     <controls:MetroWindow.Resources>
 
-        <x:Array x:Key="MenuItemAttach" Type="{x:Type MenuItem}">
+        <x:Array x:Key="MenuItemAttach" Type="{x:Type MenuItem}" >
             <MenuItem Click="buttonAttach_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFile]}" />
             <MenuItem Click="MenuItemAttachFolder_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFolders]}" />
             <MenuItem Click="MenuItemClear_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.ClearAll]}" />
         </x:Array>
-        <Style x:Key="columnHeader" TargetType="{x:Type GridViewColumnHeader}">
+        <Style x:Key="columnHeader" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
             <Setter Property="HorizontalContentAlignment" Value="Left" />
         </Style>
-        <Style x:Key="toolbarLabel" TargetType="{x:Type TextBlock}">
+        <Style x:Key="toolbarLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontWeight" Value="Bold" />
@@ -130,6 +129,38 @@
                 </Rectangle>
             </Button>
             <Button VerticalAlignment="Center"
+                          Foreground="White"
+                          ToolTip="{Binding Source={StaticResource Locator},
+                                            Path=LocalizationHelper.[Resources.Theme]}"
+                    Click="OnThemeSettingsClicked">
+                <Rectangle Width="15"
+                           Height="15"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                          Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill">
+                            <VisualBrush.Visual>
+                                <Path Width="20"
+                                      Height="20"
+                                      Data="M35.254999,36.515999L31.702944,64 11.167989,64 7.7709999,36.671001z M4.375,29.877998L38.652,29.877998 38.652,33.737 4.375,33.737z M2.6721849,18.580999L8.5430002,28.294001 6.8061419,28.294001 1.2919998,19.428738z M6.2528448,16.556L13.367001,28.371 11.515526,28.3332 4.8649998,17.393192z M10.031145,14.309999L18.181999,28.295799 16.782325,28.34 8.6300001,15.126404z M22.594,13.202L24.215,13.202 24.215,28.254999 22.594,28.254999z M18.271,13.202L19.891,13.202 19.891,28.254999 18.271,28.254999z M14.101,13.202L15.723,13.202 15.723,20.865999 14.101,18.270527z M13.841,11.270998L24.184999,11.270998 24.184999,12.506998 13.841,12.506998z M13.841,9.1089993L24.184999,9.1089993 24.184999,10.344999 13.841,10.344999z M0.45599937,8.2999992L0.5626812,12.113998 4,10.216097z M0,7.4879999L8.8509998,12.4297 0.20573807,17.68z M13.841,7.1029987L24.184999,7.1029987 24.184999,8.336998 13.841,8.336998z M13.88,0.096000671L24.146999,0.096000671 24.146999,6.1759987 13.88,6.1759987z M41.121037,0L49.074001,4.2460289 46.449047,8.9556217 41.894424,6.4842873 40.25528,9.5143604 44.905003,12.120794 43.129055,15.285999 38.47176,12.811325 36.837284,15.832767 41.507999,18.450546 39.733353,21.615999 35.053167,19.130835 33.436985,22.118464 38.188999,24.7815 36.412743,27.946999 31.652037,25.418068 30.159029,28.177998 26.067999,28.177998z"
+                                      Fill="Red"
+                                      RenderTransformOrigin="0.5,0.5"
+                                      Stretch="Uniform">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="0" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button VerticalAlignment="Center"
                     Click="buttonAbout_Click"
                     Foreground="White"
                     ToolTip="{Binding Source={StaticResource Locator},
@@ -164,19 +195,27 @@
 
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
+    <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl >
+            <controls:Flyout x:Name="flyoutsControl" Header="{Binding Source={StaticResource Locator},
+                                              Path=LocalizationHelper.[Resources.Theme]}" IsPinned="False"
+                             Position="Right">
+                <themes:ThemeSelectionViewModel />
+            </controls:Flyout>
+        </controls:FlyoutsControl>
+    </controls:MetroWindow.Flyouts>
 
     <DockPanel Name="dockPanel1" LastChildFill="True">
-        <ToolBar Name="toolBar1"
-                 Height="32"
+        <WrapPanel Height="32" Margin="0,0,0,10"
                  VerticalAlignment="Top"
-                 DockPanel.Dock="Top">
+                 DockPanel.Dock="Top" >
             <TextBlock Style="{StaticResource toolbarLabel}" Text="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.NetworkInterface], StringFormat={}{0} :}" />
             <ComboBox Name="comboBoxNetwork"
                       Width="120"
                       Height="28"
                       DropDownOpened="comboBoxNetwork_DropDownOpened"
                       SelectionChanged="comboBoxNetwork_SelectionChanged" />
-            <Separator />
+            <Rectangle Fill="{DynamicResource BlackColorBrush}" Width="2" Height="28" VerticalAlignment="Center" Margin="25,0"/>
             <TextBlock Style="{StaticResource toolbarLabel}">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0} : {1}">
@@ -186,7 +225,7 @@
                 </TextBlock.Text>
             </TextBlock>
 
-        </ToolBar>
+        </WrapPanel>
         <Grid Name="grid1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" MinHeight="50" />
@@ -196,9 +235,12 @@
 
             <ListView Name="listViewMembers"
                       Grid.Row="0"
-                      SelectedItem="{Binding Source={x:Static local:MainViewModel.Instance},Path=SelectedMember,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
+                      VerticalAlignment="Stretch"
+                      SelectedItem="{Binding Source={x:Static local:MainViewModel.Instance},
+                                             Path=SelectedMember,
+                                             Mode=TwoWay,
+                                             UpdateSourceTrigger=PropertyChanged}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="100"
@@ -287,16 +329,20 @@
                          AcceptsReturn="True"
                          AcceptsTab="True"
                          AutoWordSelection="True"
+                         Text="{Binding Source={x:Static local:MainViewModel.Instance},
+                                        Path=Message,
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
                          TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Visible"
-                         Text="{Binding Source={x:Static local:MainViewModel.Instance},Path=Message,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          wpf:TextFieldAssist.Hint="{Binding Source={StaticResource Locator},
                                                             Path=LocalizationHelper.[Resources.MessageToSend]}" />
                 <StackPanel Name="stackPanel1" Grid.Row="3">
                     <Button Name="buttonSend"
                             Height="25"
                             Margin="4"
-                            Command="{Binding Source={x:Static local:MainViewModel.Instance},Path=SendCommand}"
+                            Command="{Binding Source={x:Static local:MainViewModel.Instance},
+                                              Path=SendCommand}"
                             Content="{Binding Source={StaticResource Locator},
                                               Path=LocalizationHelper.[Resources.Send]}">
                         <Button.Style>
@@ -306,7 +352,7 @@
                                     <DataTrigger Binding="{Binding ElementName=listViewMembers, Path=SelectedIndex, FallbackValue=-1}" Value="-1">
                                         <Setter Property="IsEnabled" Value="False" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static local:MainViewModel.Instance},Path=Message.Length, FallbackValue=0}" Value="0">
+                                    <DataTrigger Binding="{Binding Source={x:Static local:MainViewModel.Instance}, Path=Message.Length, FallbackValue=0}" Value="0">
                                         <Setter Property="IsEnabled" Value="False" />
                                     </DataTrigger>
                                 </Style.Triggers>

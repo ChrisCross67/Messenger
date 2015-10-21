@@ -189,4 +189,10 @@
   <data name="Version" xml:space="preserve">
     <value>Version</value>
   </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Attachment" xml:space="preserve">
+    <value>Attachment</value>
+  </data>
 </root>

@@ -13,6 +13,8 @@ using Messenger.Properties;
 
 using Messenger.Protocol;
 using System.ComponentModel;
+using MahApps.Metro;
+using Messenger.Themes;
 
 namespace Messenger
 {
@@ -23,6 +25,8 @@ namespace Messenger
     {
         public MainWindow()
         {
+            Messager.Logger = new MessageLogger();
+
             InitializeComponent();
 
             MainViewModel.Instance.Attachments = new ObservableCollection<Attachment>();
@@ -31,7 +35,6 @@ namespace Messenger
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSettings();
-            Messager.Logger = new MessageLogger();
             listBoxAttachmentList.ItemsSource = MainViewModel.Instance.Attachments;
             listViewMembers.ItemsSource = Messager.Members;
             //listViewFiles.ItemsSource = Messager.Files;
@@ -225,6 +228,12 @@ namespace Messenger
             AboutWindow window = new AboutWindow();
             window.Owner = this;
             window.ShowDialog();
+        }
+
+        private void OnThemeSettingsClicked(object sender, RoutedEventArgs e)
+        {
+            //ThemeSelectionViewModel.Initialize();
+            flyoutsControl.IsOpen = true;
         }
     }
 }

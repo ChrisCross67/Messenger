@@ -26,5 +26,11 @@
     <Setting Name="CultureInfo" Type="System.String" Scope="User">
       <Value Profile="(Default)">en-US</Value>
     </Setting>
+    <Setting Name="AppTheme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BaseDark</Value>
+    </Setting>
+    <Setting Name="AccentTheme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DeepPurple</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

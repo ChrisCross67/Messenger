@@ -26,7 +26,7 @@ namespace Messenger
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(weblink.NavigateUri.AbsoluteUri);
+            Process.Start(weblink.NavigateUri.AbsoluteUri);
         }
 
         private void buttonOK_Click(object sender, RoutedEventArgs e)

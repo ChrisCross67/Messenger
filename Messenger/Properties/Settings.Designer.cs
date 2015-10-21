@@ -118,5 +118,29 @@ namespace Messenger.Properties {
                 this["CultureInfo"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BaseDark")]
+        public string AppTheme {
+            get {
+                return ((string)(this["AppTheme"]));
+            }
+            set {
+                this["AppTheme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DeepPurple")]
+        public string AccentTheme {
+            get {
+                return ((string)(this["AccentTheme"]));
+            }
+            set {
+                this["AccentTheme"] = value;
+            }
+        }
     }
 }

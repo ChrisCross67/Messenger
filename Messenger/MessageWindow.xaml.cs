@@ -139,16 +139,11 @@ namespace Messenger
 
         private void btnReplay_Click(object sender, RoutedEventArgs e)
         {
-            var message = SentMessages.FirstOrDefault();
-            if (message == null)
-                return;
-
-            Member member = Messager.GetMember(message);
             CloseWindow();
             MainWindow window = (MainWindow)Application.Current.MainWindow;
             window.WindowState = WindowState.Normal;
             window.Activate();
-            window.Select(member);
+            window.Select(Sender);
         }
     }
 }

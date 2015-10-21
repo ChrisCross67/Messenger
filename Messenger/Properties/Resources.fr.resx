@@ -192,4 +192,10 @@
   <data name="Version" xml:space="preserve">
     <value>Version</value>
   </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="Attachment" xml:space="preserve">
+    <value>Pièce jointes</value>
+  </data>
 </root>

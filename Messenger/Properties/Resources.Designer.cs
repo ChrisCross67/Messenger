@@ -106,6 +106,15 @@ namespace Messenger.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Attachment.
+        /// </summary>
+        internal static string Attachment {
+            get {
+                return ResourceManager.GetString("Attachment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Author.
         /// </summary>
         internal static string Author {
@@ -237,6 +246,15 @@ namespace Messenger.Properties {
         internal static string SetupOptions {
             get {
                 return ResourceManager.GetString("SetupOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Theme.
+        /// </summary>
+        internal static string Theme {
+            get {
+                return ResourceManager.GetString("Theme", resourceCulture);
             }
         }
         
