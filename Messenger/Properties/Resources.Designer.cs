@@ -169,6 +169,15 @@ namespace Messenger.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Me.
+        /// </summary>
+        internal static string Me {
+            get {
+                return ResourceManager.GetString("Me", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Message to send ....
         /// </summary>
         internal static string MessageToSend {

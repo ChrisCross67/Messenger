@@ -3,23 +3,60 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:converter="clr-namespace:Messenger.Converters"
+                      xmlns:local="clr-namespace:Messenger"
                       xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                      xmlns:utils="clr-namespace:Messenger.Utils"
+                      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
                       Name="messageWindow"
-                      Title="{Binding Sender}"
+                      Title="{Binding Member.UserName}"
                       Width="500"
                       Height="400"
+                      AllowsTransparency="True"
+                      Closing="OnClosing"
                       FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                       GlowBrush="{DynamicResource AccentColorBrush}"
-                      Icon="/Messenger;component/Icons/text.ico"
-                      LocationChanged="messageWindow_LocationChanged"
+                      Icon="/Messenger;component/Icons/User-Message.png"
                       WindowTransitionsEnabled="False">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
         <converter:ToCheckableConverter x:Key="ToCheckable" />
+        <converter:IconConverter x:Key="IconConverter" />
+        <converter:FileIconConverter x:Key="FileIconConverter" />
+        <converter:FileSizeConverter x:Key="FileSizeConverter" />
+        <x:Array x:Key="MenuItemAttach" Type="{x:Type MenuItem}">
+            <MenuItem Click="buttonAttach_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFile]}" />
+            <MenuItem Click="MenuItemAttachFolder_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFolders]}" />
+            <MenuItem Click="MenuItemClear_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.ClearAll]}" />
+        </x:Array>
         <DataTemplate x:Key="AttachmentItem">
+            <DockPanel LastChildFill="True">
+                <Image Width="16"
+                       Height="16"
+                       Margin="0,0,4,0"
+                       DockPanel.Dock="Left"
+                       Source="{Binding Path=FullPath,
+                                        Converter={StaticResource FileIconConverter}}"
+                       Stretch="UniformToFill" />
+                <utils:ImageButton x:Name="buttonRemove"
+                                   Width="32"
+                                   Height="23"
+                                   Click="buttonRemove_Click"
+                                   DockPanel.Dock="Right"
+                                   Image="/Messenger;component/Icons/remove.png"
+                                   ToolTip="{Binding Source={StaticResource Locator},
+                                                     Path=LocalizationHelper.[Resources.RemoveFromList]}" />
+                <TextBlock Height="23"
+                           HorizontalAlignment="Stretch"
+                           Padding="0"
+                           Text="{Binding Name}"
+                           TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ReceiveAttachmentItem">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding Checked}" />
-                <TextBlock Text="{Binding Item.Name}" />
+                <TextBlock Text="{Binding Item.Name}" TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
             </StackPanel>
         </DataTemplate>
         <Style x:Key="AttachmentPanelStyle" TargetType="{x:Type Panel}">
@@ -29,108 +66,254 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <DataTemplate x:Key="SenderTemplate">
+            <ScrollViewer MaxWidth="{Binding ElementName=messageWindow,
+                                             Path=ActualWidth,
+                                             Mode=OneWay,
+                                             UpdateSourceTrigger=PropertyChanged}"
+                          MaxHeight="300"
+                          Margin="0,2"
+                          HorizontalAlignment="Left"
+                          VerticalScrollBarVisibility="Auto">
+                <Border Background="{DynamicResource GrayBrush10}" CornerRadius="8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.RowSpan="2"
+                                Background="{DynamicResource PrimaryHueLightBrush}"
+                                CornerRadius="2 0 0 2"
+                                Padding="8"
+                                TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}">
+                            <TextBlock Text="{Binding Path=Date, StringFormat={}{0:d}&#x0a;{0:T}}" />
+                        </Border>
+                        <TextBlock Grid.Column="1"
+                                   Margin="8"
+                                   HorizontalAlignment="Left"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   Text="{Binding Content}"
+                                   TextWrapping="Wrap" />
+                        <Expander Grid.Row="1"
+                                  Grid.Column="1"
+                                  Header="{Binding Source={StaticResource Locator},
+                                                   Path=LocalizationHelper.[Resources.Attachment]}"
+                                  Visibility="{Binding Path=HasAttachment,
+                                                       UpdateSourceTrigger=PropertyChanged,
+                                                       Converter={StaticResource BooleanToVisibility}}">
+                            <StackPanel Name="attachmentPanel" Orientation="Horizontal">
+                                <ListBox Name="listBoxAttachmentList"
+                                         MinHeight="28"
+                                         MaxHeight="90"
+                                         Margin="0,4,0,4"
+                                         DataContext="{Binding Path=Attachments}"
+                                         ItemTemplate="{StaticResource ReceiveAttachmentItem}"
+                                         ItemsSource="{Binding Path=.,
+                                                               Converter={StaticResource ToCheckable}}" />
+                                <Button Name="buttonSave"
+                                        Width="40"
+                                        Height="28"
+                                        Margin="5,4,5,4"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Click="buttonSave_Click"
+                                        Content="{Binding Source={StaticResource Locator},
+                                                          Path=LocalizationHelper.[Resources.Save]}"
+                                        Padding="2"
+                                        Tag="{Binding ElementName=listBoxAttachmentList}" />
+                            </StackPanel>
+                        </Expander>
+                    </Grid>
+
+                </Border>
+            </ScrollViewer>
+        </DataTemplate>
+        <DataTemplate x:Key="SelfTemplate">
+            <ScrollViewer MaxWidth="{Binding ElementName=messageWindow,
+                                             Path=ActualWidth,
+                                             Mode=OneWay,
+                                             UpdateSourceTrigger=PropertyChanged}"
+                          MaxHeight="300"
+                          Margin="0,2"
+                          VerticalScrollBarVisibility="Auto">
+                <Border HorizontalAlignment="Right"
+                        Background="{DynamicResource AccentColorBrush}"
+                        CornerRadius="8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Margin="8"
+                                   HorizontalAlignment="Right"
+                                   Foreground="White"
+                                   Text="{Binding Content}"
+                                   TextWrapping="Wrap" />
+                        <Border Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Background="{DynamicResource PrimaryHueLightBrush}"
+                                CornerRadius="2 0 0 2"
+                                Padding="8"
+                                TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}">
+                            <TextBlock Text="{Binding Path=Date, StringFormat={}{0:d}&#x0a;{0:T}}" />
+                        </Border>
+                        <Expander Grid.Row="1"
+                                  Grid.Column="0"
+                                  Header="{Binding Source={StaticResource Locator},
+                                                   Path=LocalizationHelper.[Resources.Attachment]}"
+                                  Visibility="{Binding Path=HasAttachment,
+                                                       UpdateSourceTrigger=PropertyChanged,
+                                                       Converter={StaticResource BooleanToVisibility}}">
+                            <ListBox Name="listBoxAttachmentList"
+                                     MinHeight="28"
+                                     MaxHeight="90"
+                                     Margin="0,4,0,4"
+                                     DataContext="{Binding Path=Attachments}"
+                                     ItemTemplate="{StaticResource ReceiveAttachmentItem}"
+                                     ItemsSource="{Binding Path=.,
+                                                           Converter={StaticResource ToCheckable}}" />
+                        </Expander>
+                    </Grid>
+                </Border>
+            </ScrollViewer>
+
+        </DataTemplate>
     </Window.Resources>
-    <DockPanel LastChildFill="True">
-        <Popup Name="popupReceive"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <!--<Popup Name="popupReceive"
                Width="400"
                Height="100"
                AllowsTransparency="True"
                Placement="Center"
                PlacementTarget="{Binding ElementName=messageWindow}">
-            <Border Background="LightYellow"
+                <Border Background="LightYellow"
                     BorderBrush="Black"
                     BorderThickness="1">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Name="labelReciveFile"
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Name="labelReciveFile"
                                Height="30"
                                Padding="4" />
-                    <ProgressBar Name="recivedProgress"
+                        <ProgressBar Name="recivedProgress"
                                  Width="360"
                                  Height="30"
                                  VerticalAlignment="Bottom"
                                  HorizontalContentAlignment="Left"
                                  VerticalContentAlignment="Top" />
-                    <TextBlock Name="textBlockTransferSpeed"
+                        <TextBlock Name="textBlockTransferSpeed"
                                Height="30"
                                HorizontalAlignment="Center"
                                Padding="4" />
-                </StackPanel>
-            </Border>
-        </Popup>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical">
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <Button Margin="4,4,20,4"
-                        HorizontalAlignment="Center"
-                        Click="btnReplay_Click"
-                        Content="Replay" />
-                <Button Margin="20,4,4,4"
-                        HorizontalAlignment="Center"
-                        Click="btnClose_Click"
-                        Content="Close" />
-            </StackPanel>
-        </StackPanel>
-        <ListBox Margin="5"
-                 HorizontalAlignment="Stretch"
-                 FontSize="13"
-                 ItemsSource="{Binding ElementName=messageWindow,
-                                       Path=SentMessages,
-                                       Mode=OneWay,
-                                       UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource MaterialDesignCardsListBox}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <ScrollViewer MaxWidth="{Binding ElementName=messageWindow, Path=ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" MaxHeight="300">
-                        <Grid Background="{DynamicResource GrayBrush10}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="{Binding ElementName=messageWindow, Path=ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </Grid.ColumnDefinitions>
-                            <Border Background="{DynamicResource PrimaryHueLightBrush}"
-                                    CornerRadius="2 0 0 2"
-                                    Padding="8" Grid.RowSpan="2"
-                                    TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}">
-                                <TextBlock Text="{Binding Path=Date, StringFormat={}{0:d}&#x0a;{0:T}}" />
-                            </Border>
-                            <TextBlock Grid.Column="1"
-                                       Margin="8" Foreground="{DynamicResource TextBrush}"
-                                       Text="{Binding Content}"
-                                       TextWrapping="Wrap" />
-                            <Expander Grid.Row="1"
-                                      Grid.Column="1"
-                                      Header="{Binding Source={StaticResource Locator},Path=LocalizationHelper.[Resources.Attachment]}"
-                                      Visibility="{Binding Path=HasAttachment,
-                                                           UpdateSourceTrigger=PropertyChanged,
-                                                           Converter={StaticResource BooleanToVisibility}}">
-                                <StackPanel Name="attachmentPanel" Orientation="Horizontal">
-                                    <ListBox Name="listBoxAttachmentList"
-                                             MinHeight="28"
-                                             MaxHeight="90"
-                                             Margin="0,4,0,4"
-                                             DataContext="{Binding Path=Attachments}"
-                                             ItemTemplate="{StaticResource AttachmentItem}"
-                                             ItemsSource="{Binding Path=.,
-                                                                   Converter={StaticResource ToCheckable}}" />
-                                    <Button Name="buttonSave"
-                                            Width="40"
-                                            Height="28"
-                                            Margin="5,4,5,4"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Click="buttonSave_Click"
-                                            Content="{Binding Source={StaticResource Locator},
-                                                              Path=LocalizationHelper.[Resources.Save]}"
-                                            Padding="2"
-                                            Tag="{Binding ElementName=listBoxAttachmentList}" />
-                                </StackPanel>
-                            </Expander>
-                        </Grid>
-                    </ScrollViewer>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+                    </StackPanel>
+                </Border>
+            </Popup>-->
+        <ScrollViewer Margin="5"
+                      HorizontalAlignment="Stretch"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="ItemsControlMessage" Background="Transparent"
+                          FontSize="13" ScrollViewer.CanContentScroll="True" VirtualizingStackPanel.IsVirtualizing="True"
+                          ItemsSource="{Binding Path=Messages,
+                                                Mode=OneWay,
+                                                UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemTemplateSelector>
+                    <local:MessageItemTemplateSelector SelfTemplate="{StaticResource SelfTemplate}" SenderTemplate="{StaticResource SenderTemplate}" />
+                </ItemsControl.ItemTemplateSelector>
+            </ItemsControl>
+        </ScrollViewer>
+        <GridSplitter Name="gridSplitter2"
+                      Grid.Row="1"
+                      HorizontalAlignment="Stretch"
+                      ResizeBehavior="PreviousAndNext" />
+        <Grid Name="grid2" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Name="attachmentPanel"
+                       Grid.Row="0"
+                       LastChildFill="True">
+                <controls:DropDownButton Name="DownButton1"
+                                         Margin="5,1,5,1"
+                                         VerticalAlignment="Center"
+                                         Background="#673ab7"
+                                         BorderBrush="{StaticResource PrimaryHueMidBrush}"
+                                         Content="{Binding Source={StaticResource Locator},
+                                                           Path=LocalizationHelper.[Resources.Attach]}"
+                                         DockPanel.Dock="Top"
+                                         Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         ItemsSource="{Binding Source={StaticResource MenuItemAttach},
+                                                               Path=.}"
+                                         Padding="4,0,4,0">
+                    <controls:DropDownButton.Icon>
+                        <Path Width="18"
+                              Height="18"
+                              Data="M552.043,0.018663C594.104,0.538098 634.535,11.9046 665.628,34.5811 736.78,86.3765 732.29,177.758 655.728,238.569L572.631,304.533 572.831,304.77 359.658,474.043C322.66,503.395 264.776,507.013 230.342,481.985 195.99,456.965 198.074,412.75 235.154,383.344L448.407,213.988 499.877,251.618 286.663,420.929C282.735,424.004 281.814,427.439 281.653,429.674 281.492,431.945 282.173,435.218 285.861,437.891 291.713,442.201 301.775,441.563 308.108,436.536L509.576,276.478 509.377,276.359 604.098,201.061C650.076,164.586 652.801,109.68 610.151,78.6749 567.5,47.5504 495.548,51.8961 449.649,88.4115L111.811,359.876C66.9557,395.594,63.7494,448.706,103.393,480.107L230.143,576.948C272.995,605.999,342.902,601.281,387.917,565.547L699.341,317.42 749.768,355.89 439.427,603.181C364.068,662.911,247.339,670.602,175.828,621.692L175.306,621.997 46.5119,523.562 46.9132,523.285C-20.19,471.049,-14.9384,382.064,60.3022,322.328L398.101,50.8236C441.189,16.6138,497.964,-0.649202,552.043,0.018663z"
+                              Fill="{StaticResource PrimaryHueMidBrush}"
+                              Stretch="Uniform" />
+                    </controls:DropDownButton.Icon>
+                </controls:DropDownButton>
+
+                <ListBox Name="listBoxAttachmentList"
+                         Margin="1,1,5,1"
+                         AllowDrop="True"
+                         Drop="listBoxAttachmentList_Drop"
+                         ItemTemplate="{StaticResource AttachmentItem}"
+                         ItemsSource="{Binding Attachments}"
+                         SizeChanged="listBoxAttachmentList_SizeChanged" />
+            </DockPanel>
+
+            <GridSplitter Grid.Row="1"
+                          HorizontalAlignment="Stretch"
+                          ResizeBehavior="PreviousAndNext" />
+            <TextBox Grid.Row="2"
+                     VerticalAlignment="Stretch"
+                     AcceptsReturn="True"
+                     AcceptsTab="True"
+                     AutoWordSelection="True"
+                     Text="{Binding Path=MessageToSend,
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap"
+                     wpf:TextFieldAssist.Hint="{Binding Source={StaticResource Locator},
+                                                        Path=LocalizationHelper.[Resources.MessageToSend]}" />
+        </Grid>
+        <Button Name="buttonSend"
+                Grid.Row="3"
+                Height="25"
+                Margin="4"
+                Command="{Binding Source={x:Static local:MessagerViewModel.Instance},
+                                  Path=SendCommand}"
+                CommandParameter="{Binding ElementName=messageWindow,
+                                           Path=DataContext}"
+                Content="{Binding Source={StaticResource Locator},
+                                  Path=LocalizationHelper.[Resources.Send]}">
+            <Button.Style>
+                <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                    <Setter Property="IsEnabled" Value="True" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=MessageToSend.Length, FallbackValue=0}" Value="0">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+    </Grid>
+
 </controls:MetroWindow>

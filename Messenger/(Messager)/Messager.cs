@@ -365,11 +365,18 @@ namespace Messenger
                 message.Date = DateTime.Now;
                 if (receivedMessage == null)
                 {
+                    var messager = new MessagerModel
+                    {
+                        Messages = new ObservableCollection<Message> {  message },
+                        Member = GetMember(message)
+                    };
+                    MessagerViewModel.Instance.Messagers.Add(messager);
                     receivedMessage = new MessageWindow();
-                    receivedMessage.DataContext = message;
-                    receivedMessage.Sender = GetMember(message);
-                    receivedMessage.SentMessages.Add(message);
-                    receivedMessage.Name = message.SenderName;
+                    receivedMessage.DataContext = messager;
+                    receivedMessage.MessageContext = messager;
+                    //if (!string.IsNullOrEmpty(message.Content))
+                    //    receivedMessage.MessageContext.Messages.Add(message);
+                    receivedMessage.Tag = message.SenderName;
                     receivedMessage.Show();
                     if (Properties.Settings.Default.ActivateComingMessage)
                     {
@@ -378,9 +385,11 @@ namespace Messenger
                 }
                 else
                 {
-                    receivedMessage.SentMessages.Add(message);
+                    //var messager = receivedMessage.DataContext as MessagerModel;
+                    //if (messager == null)
+                    //    return;
+                    receivedMessage.MessageContext.Messages.Add(message);
                     receivedMessage.Activate();
-
                 }
             }));
         }
@@ -388,14 +397,14 @@ namespace Messenger
         {
             return string.IsNullOrEmpty(name)
                ? Application.Current.Windows.OfType<T>().Any()
-               : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
+               : Application.Current.Windows.OfType<T>().Any(w => w.Tag != null && w.Tag.ToString().Equals(name));
         }
         public static T GetWindowOpen<T>(string name = "") where T : Window
         {
             if (IsWindowOpen<T>(name))
                 return string.IsNullOrEmpty(name)
                    ? Application.Current.Windows.OfType<T>().FirstOrDefault()
-                   : Application.Current.Windows.OfType<T>().FirstOrDefault(w => w.Name.Equals(name));
+                   : Application.Current.Windows.OfType<T>().FirstOrDefault(w => w.Tag != null && w.Tag.ToString().Equals(name));
 
             return null;
         }

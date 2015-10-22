@@ -22,7 +22,7 @@ namespace Messenger
                               e.Exception);
             Messager.LogError(msg);
 
-            File.WriteAllText(Path.Combine(AppFolder, "IPMessagerLog.txt"), Messager.Logger.Messages);
+            File.WriteAllText(Path.Combine(AppFolder, "Messager.log"), Messager.Logger.Messages);
         }
 
         public static string AppFolder
@@ -41,12 +41,12 @@ namespace Messenger
         public static List<string> GetIconPaths()
         {
             List<string> iconPaths = new List<string>();
-            iconPaths.Add("Icons/IPMSG.ICO");
-            iconPaths.Add("Icons/screen.ico");
-            iconPaths.Add("Icons/computer.ico");
-            iconPaths.Add("Icons/man.ico");
-            iconPaths.Add("Icons/boy.ico");
-            iconPaths.Add("Icons/girl.ico");
+            //iconPaths.Add("Icons/IPMSG.ICO");
+            //iconPaths.Add("Icons/screen.ico");
+            //iconPaths.Add("Icons/computer.ico");
+            //iconPaths.Add("Icons/man.ico");
+            //iconPaths.Add("Icons/boy.ico");
+            //iconPaths.Add("Icons/girl.ico");
             string iconFolder = Path.Combine(AppFolder, "Icons");
             if (Directory.Exists(iconFolder))
             {

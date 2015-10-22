@@ -27,13 +27,27 @@ namespace Messenger.Protocol
         /// The name of the sender.
         /// </value>
         public string SenderName { get; set; }
+        string senderHost;
+
         /// <summary>
         /// Gets or sets the sender host.
         /// </summary>
         /// <value>
         /// The sender host.
         /// </value>
-        public string SenderHost { get; set; }
+        public string SenderHost
+        {
+            get
+            {
+                return senderHost;
+            }
+
+            set
+            {
+                senderHost = value;
+            }
+        }
+
         /// <summary>
         /// The command
         /// </summary>

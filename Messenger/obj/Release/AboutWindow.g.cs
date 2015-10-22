@@ -10,7 +10,6 @@
 //------------------------------------------------------------------------------
 
 using MahApps.Metro.Controls;
-using Messenger.Themes;
 using System;
 using System.Diagnostics;
 using System.Windows;

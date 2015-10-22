@@ -1,22 +1,75 @@
 ﻿using System.Net;
-using System.ComponentModel;
+using Messenger.Utils;
 
 namespace Messenger
 {
-    public class Member : INotifyPropertyChanged
+    public class Member : NotifyPropertyChangedBase
     {
-        public string UserName { get; set; }
+        string userName;
 
-        public string MachineName { get; set; }
+        public string UserName
+        {
+            get
+            {
+                return userName;
+            }
 
-        public IPEndPoint IPEndPoint { get; set; }
+            set
+            {
+                userName = value;
+                OnPropertyChanged();
+            }
+        }
+        string machineName;
+
+        public string MachineName
+        {
+            get
+            {
+                return machineName;
+            }
+
+            set
+            {
+                machineName = value;
+                OnPropertyChanged();
+            }
+        }
+        IPEndPoint iPEndPoint;
+
+        public IPEndPoint IPEndPoint
+        {
+            get
+            {
+                return iPEndPoint;
+            }
+
+            set
+            {
+                iPEndPoint = value;
+                OnPropertyChanged();
+            }
+        }
 
         public IPAddress IPAddress
         {
             get { return IPEndPoint.Address; }
         }
+        string version;
 
-        public string Version { get; set; }
+        public string Version
+        {
+            get
+            {
+                return version;
+            }
+
+            set
+            {
+                version = value;
+                OnPropertyChanged();
+            }
+        }
 
         byte[] icon;
         public byte[] Icon
@@ -25,22 +78,8 @@ namespace Messenger
             set
             {
                 icon = value;
-                OnPropertyChanged("Icon");
+                OnPropertyChanged();
             }
         }
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        #endregion
     }
 }

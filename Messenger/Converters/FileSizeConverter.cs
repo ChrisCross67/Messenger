@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Data;
-using Messenger.Utils;
 using Messenger.Protocol;
 
 namespace Messenger.Converters

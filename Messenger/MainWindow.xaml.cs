@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using System.Collections.ObjectModel;
 using System.Text;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
-using Messenger.Utils;
 using Messenger.Utils.WPF;
 using Messenger.Properties;
 
 using Messenger.Protocol;
 using System.ComponentModel;
-using MahApps.Metro;
-using Messenger.Themes;
+using System.Windows.Input;
+using Messenger.Extensions;
+using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace Messenger
 {
@@ -28,20 +26,58 @@ namespace Messenger
             Messager.Logger = new MessageLogger();
 
             InitializeComponent();
-
-            MainViewModel.Instance.Attachments = new ObservableCollection<Attachment>();
         }
+
+
+        public MemberList Members
+        {
+            get { return (MemberList)GetValue(MembersProperty); }
+            set { SetValue(MembersProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Members.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MembersProperty =
+            DependencyProperty.Register("Members", typeof(MemberList), typeof(MainWindow), new PropertyMetadata(new MemberList()));
+
+
+
+        public List<System.Net.IPAddress> Networks
+        {
+            get { return (List<System.Net.IPAddress>)GetValue(NetworksProperty); }
+            set { SetValue(NetworksProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Networks.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NetworksProperty =
+            DependencyProperty.Register("Networks", typeof(List<System.Net.IPAddress>), typeof(MainWindow), new PropertyMetadata(new List<System.Net.IPAddress>()));
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSettings();
-            listBoxAttachmentList.ItemsSource = MainViewModel.Instance.Attachments;
-            listViewMembers.ItemsSource = Messager.Members;
-            //listViewFiles.ItemsSource = Messager.Files;
-            comboBoxNetwork.ItemsSource = Network.Network.GetIPv4NetworkInterfaces();
-            if (comboBoxNetwork.Items.Count > 0)
+            Messager.Members.CollectionChanged += OnMembersChanged;
+            Networks = Network.Network.GetIPv4NetworkInterfaces();
+        }
+
+        private void OnMembersChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if(e.NewItems != null && e.NewItems[0] != null)
             {
-                comboBoxNetwork.SelectedIndex = 0;
+                foreach (Member newMember in e.NewItems)
+                {
+                    if (newMember.UserName.Equals(Messager.Self.UserName))
+                        continue;
+                    Members.AddMember(newMember);
+                }
+            }
+            if (e.OldItems != null && e.OldItems[0] != null)
+            {
+                foreach (Member oldMember in e.NewItems)
+                {
+                    if (oldMember.UserName.Equals(Messager.Self.UserName))
+                        continue;
+                    Members.RemoveMember(oldMember.IPAddress);
+                }
             }
         }
 
@@ -55,7 +91,7 @@ namespace Messenger
             {
                 Messager.PortNumber = Settings.Default.PortNumber;
             }
-            Messager.Self.Icon = App.LoadIcon(Settings.Default.IconIndex);
+            //Messager.Self.Icon = App.LoadIcon(Settings.Default.IconIndex);
             try
             {
                 Messager.TextEncoding = Encoding.GetEncoding(Settings.Default.TextEncoding);
@@ -63,9 +99,9 @@ namespace Messenger
             catch { }
         }
 
-        private void comboBoxNetwork_DropDownOpened(object sender, EventArgs e)
+        private void OnComboBoxDropDownOpened(object sender, EventArgs e)
         {
-            comboBoxNetwork.ItemsSource = Network.Network.GetIPv4NetworkInterfaces();
+            Networks = Network.Network.GetIPv4NetworkInterfaces();
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -75,11 +111,14 @@ namespace Messenger
             Settings.Default.Save();
         }
 
-        private void comboBoxNetwork_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OnComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (comboBoxNetwork.SelectedItem != null)
+            var comboBox = sender as ComboBox;
+            if (comboBox == null)
+                return;
+            if (comboBox.SelectedItem != null)
             {
-                Messager.StartListening((System.Net.IPAddress)comboBoxNetwork.SelectedItem,
+                Messager.StartListening((System.Net.IPAddress)comboBox.SelectedItem,
                     Dispatcher);
                 Messager.RefreshMembers();
             }
@@ -88,40 +127,6 @@ namespace Messenger
         private void buttonRefresh_Click(object sender, RoutedEventArgs e)
         {
             Messager.RefreshMembers();
-        }
-
-        private void buttonAttach_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.InitialDirectory = Settings.Default.LastSendDirectory;
-            dialog.Multiselect = true;
-            if (dialog.ShowDialog() == true)
-            {
-                Settings.Default.LastSendDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
-                foreach (string file in dialog.FileNames)
-                {
-                    AttachFile(file);
-                }
-                AutoAdjustHeight();
-            }
-        }
-
-        private void MenuItemAttachFolder_Click(object sender, RoutedEventArgs e)
-        {
-            FolderDialog dialog = new FolderDialog();
-            dialog.Folder = Settings.Default.LastSendDirectory;
-            if (dialog.ShowDialog(this) == true)
-            {
-                Settings.Default.LastSendDirectory = dialog.Folder;
-                AttachDirectory(dialog.Folder);
-                AutoAdjustHeight();
-            }
-
-        }
-
-        private void MenuItemClear_Click(object sender, RoutedEventArgs e)
-        {
-            MainViewModel.Instance.Attachments.Clear();
         }
 
         private void buttonOption_Click(object sender, RoutedEventArgs e)
@@ -134,94 +139,6 @@ namespace Messenger
             }
         }
 
-        private void buttonRemove_Click(object sender, RoutedEventArgs e)
-        {
-            ListBoxItem item = (ListBoxItem)listBoxAttachmentList.ContainerFromElement((DependencyObject)sender);
-            if (item != null)
-            {
-                MainViewModel.Instance.Attachments.Remove((Attachment)item.DataContext);
-                AutoAdjustHeight();
-            }
-            else
-            {
-                //item = (ListBoxItem)listViewFiles.ContainerFromElement((DependencyObject)sender);
-                //Messager.RemoveFromFileMap((Attachment)item.DataContext);
-            }
-        }
-
-        private void AutoAdjustHeight()
-        {
-            grid2.RowDefinitions[0].Height = new GridLength(
-                23 * listBoxAttachmentList.Items.Count + 23);
-        }
-
-        private void listBoxAttachmentList_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            double changed_height = e.NewSize.Height - e.PreviousSize.Height;
-            Height += changed_height;
-        }
-
-        private void listBoxAttachmentList_Drop(object sender, DragEventArgs e)
-        {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (files != null)
-            {
-                foreach (string path in files)
-                {
-                    if (File.Exists(path))
-                    {
-                        AttachFile(path);
-                    }
-                    else if (Directory.Exists(path))
-                    {
-                        AttachDirectory(path);
-                    }
-                }
-                AutoAdjustHeight();
-            }
-        }
-
-        private void AttachFile(string file)
-        {
-            FileInfo info = new FileInfo(file);
-            Attachment attachment = new Attachment();
-            attachment.Name = info.Name;
-            attachment.Size = info.Length;
-            attachment.Time = info.LastWriteTime;
-            attachment.IsFile = true;
-            attachment.FullPath = info.FullName;
-            if (!MainViewModel.Instance.Attachments.Contains(attachment))
-            {
-                MainViewModel.Instance.Attachments.Add(attachment);
-            }
-        }
-
-        private void AttachDirectory(string folderPath)
-        {
-            DirectoryInfo info = new DirectoryInfo(folderPath);
-            Attachment attachment = new Attachment();
-            attachment.Name = info.Name;
-            attachment.Time = info.LastWriteTime;
-            attachment.IsDirectory = true;
-            attachment.FullPath = info.FullName;
-            if (!MainViewModel.Instance.Attachments.Contains(attachment))
-            {
-                MainViewModel.Instance.Attachments.Add(attachment);
-            }
-        }
-
-        public void Select(Member member)
-        {
-            //if (tabs.SelectedIndex != 0)
-            //{
-            //    tabs.SelectedIndex = 0;
-            //    Dispatcher.Invoke(
-            //        System.Windows.Threading.DispatcherPriority.ContextIdle,
-            //        new Action(delegate { }));
-            //}
-            listViewMembers.ScrollIntoView(member);
-            listViewMembers.SelectedItem = member;
-        }
 
         private void buttonAbout_Click(object sender, RoutedEventArgs e)
         {
@@ -234,6 +151,81 @@ namespace Messenger
         {
             //ThemeSelectionViewModel.Initialize();
             flyoutsControl.IsOpen = true;
+        }
+
+        private void OnUserGridClicked(object sender, RoutedEventArgs e)
+        {
+            Member member = (sender as Button).DataContext as Member;
+            if (member == null)
+                return;
+
+            Application.Current.Dispatcher.Invoke(new Action(delegate
+            {
+                var receivedMessage = Messager.GetWindowOpen<MessageWindow>(member.UserName);
+                if (receivedMessage == null)
+                {
+                    var messager = new MessagerModel
+                    {
+                        Messages = new ObservableCollection<Message>(),
+                        Member = member
+                    };
+                    MessagerViewModel.Instance.Messagers.Add(messager);
+                    receivedMessage = new MessageWindow();
+                    receivedMessage.DataContext = messager;
+                    receivedMessage.Tag = member.UserName;
+                    receivedMessage.MessageContext = messager;
+                    receivedMessage.Show();
+                    if (Settings.Default.ActivateComingMessage)
+                    {
+                        receivedMessage.Activate();
+                    }
+                }
+                else
+                    receivedMessage.Activate();
+            }));
+        }
+
+        private void OnUserGridDoubleClicked(object sender, MouseButtonEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (listBox == null)
+                return;
+            //Ensure a ListBoxItem is clicked
+            var row = this.TryFindFromPoint<ListBoxItem>(e.GetPosition(this));
+            if (row == null)
+                return;
+            if (!this.TryFindFromPoint<ListBoxItem>(e.GetPosition(this)).GetType().Equals(typeof(ListBoxItem)))
+                return;
+            //Gets the current member
+            Member member = listBox.SelectedItem as Member;
+            if (member == null)
+                return;
+
+            Application.Current.Dispatcher.Invoke(new Action(delegate
+            {
+                //Open the message window
+                var receivedMessage = Messager.GetWindowOpen<MessageWindow>(member.UserName);
+                if (receivedMessage == null)
+                {
+                    var messager = new MessagerModel
+                    {
+                        Messages = new ObservableCollection<Message>(),
+                        Member = member
+                    };
+                    MessagerViewModel.Instance.Messagers.Add(messager);
+                    receivedMessage = new MessageWindow();
+                    receivedMessage.DataContext = messager;
+                    receivedMessage.Name = member.UserName;
+                    receivedMessage.MessageContext = messager;
+                    receivedMessage.Show();
+                    if (Settings.Default.ActivateComingMessage)
+                    {
+                        receivedMessage.Activate();
+                    }
+                }
+                else
+                    receivedMessage.Activate();
+            }));
         }
     }
 }

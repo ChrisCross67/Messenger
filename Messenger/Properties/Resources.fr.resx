@@ -198,4 +198,7 @@
   <data name="Attachment" xml:space="preserve">
     <value>Pièce jointes</value>
   </data>
+  <data name="Me" xml:space="preserve">
+    <value>Moi</value>
+  </data>
 </root>

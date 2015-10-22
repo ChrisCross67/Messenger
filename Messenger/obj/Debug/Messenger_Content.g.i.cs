@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("icons/fr-fr.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("icons/remove.png")]
 
 

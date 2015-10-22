@@ -149,15 +149,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="%28Messager%29\MessageItemTemplateSelector.cs" />
+    <Compile Include="%28Messager%29\MessagerModel.cs" />
+    <Compile Include="%28Messager%29\MessagerViewModel.cs" />
     <Compile Include="AboutWindow.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\FlagConverter.cs" />
+    <Compile Include="Extensions\DependencyObjectExtentions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Locator\LocalizationHelper.cs" />
     <Compile Include="Locator\ViewModelLocator.cs" />
-    <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -230,23 +234,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\IPMSG.ICO" />
-    <Resource Include="Icons\text.ico" />
-    <Resource Include="Icons\refresh.png" />
-    <Resource Include="Icons\remove.png" />
-    <Resource Include="Icons\option.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\computer.ico" />
-    <Resource Include="Icons\man.ico" />
-    <Resource Include="Icons\screen.ico" />
-    <Resource Include="Icons\boy.ico" />
-    <Resource Include="Icons\girl.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\about.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
@@ -269,6 +256,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\fr-fr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\User-Message.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\remove.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -3,9 +3,7 @@ using Messenger.Properties;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System;
 using System.ComponentModel;
-using Messenger.Locator;
 
 namespace Messenger
 {

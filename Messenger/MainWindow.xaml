@@ -4,9 +4,11 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:converter="clr-namespace:Messenger.Converters"
                       xmlns:local="clr-namespace:Messenger"
+                      xmlns:system="clr-namespace:System;assembly=mscorlib"
                       xmlns:themes="clr-namespace:Messenger.Themes"
                       xmlns:utils="clr-namespace:Messenger.Utils"
                       xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+                      x:Name="This"
                       Title="Messenger"
                       Width="589"
                       Height="414"
@@ -19,46 +21,13 @@
                       WindowTransitionsEnabled="False">
     <controls:MetroWindow.Resources>
 
-        <x:Array x:Key="MenuItemAttach" Type="{x:Type MenuItem}" >
-            <MenuItem Click="buttonAttach_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFile]}" />
-            <MenuItem Click="MenuItemAttachFolder_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFolders]}" />
-            <MenuItem Click="MenuItemClear_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.ClearAll]}" />
-        </x:Array>
-        <Style x:Key="columnHeader" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-        </Style>
-        <Style x:Key="toolbarLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Style x:Key="toolbarLabel"
+               BasedOn="{StaticResource {x:Type TextBlock}}"
+               TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <converter:IconConverter x:Key="IconConverter" />
-        <converter:FileIconConverter x:Key="FileIconConverter" />
-        <converter:FileSizeConverter x:Key="FileSizeConverter" />
-        <DataTemplate x:Key="AttachmentItem">
-            <DockPanel LastChildFill="True">
-                <Image Width="16"
-                       Height="16"
-                       Margin="0,0,4,0"
-                       DockPanel.Dock="Left"
-                       Source="{Binding Path=FullPath,
-                                        Converter={StaticResource FileIconConverter}}"
-                       Stretch="UniformToFill" />
-                <utils:ImageButton x:Name="buttonRemove"
-                                   Width="32"
-                                   Height="23"
-                                   Click="buttonRemove_Click"
-                                   DockPanel.Dock="Right"
-                                   Image="/Messenger;component/Icons/remove.png"
-                                   ToolTip="{Binding Source={StaticResource Locator},
-                                                     Path=LocalizationHelper.[Resources.RemoveFromList]}" />
-                <Label Height="23"
-                       HorizontalAlignment="Stretch"
-                       VerticalContentAlignment="Center"
-                       Content="{Binding Name}"
-                       Padding="0" />
-            </DockPanel>
-        </DataTemplate>
     </controls:MetroWindow.Resources>
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
@@ -129,10 +98,10 @@
                 </Rectangle>
             </Button>
             <Button VerticalAlignment="Center"
-                          Foreground="White"
-                          ToolTip="{Binding Source={StaticResource Locator},
-                                            Path=LocalizationHelper.[Resources.Theme]}"
-                    Click="OnThemeSettingsClicked">
+                    Click="OnThemeSettingsClicked"
+                    Foreground="White"
+                    ToolTip="{Binding Source={StaticResource Locator},
+                                      Path=LocalizationHelper.[Resources.Theme]}">
                 <Rectangle Width="15"
                            Height="15"
                            Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
@@ -196,171 +165,120 @@
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     <controls:MetroWindow.Flyouts>
-        <controls:FlyoutsControl >
-            <controls:Flyout x:Name="flyoutsControl" Header="{Binding Source={StaticResource Locator},
-                                              Path=LocalizationHelper.[Resources.Theme]}" IsPinned="False"
+        <controls:FlyoutsControl>
+            <controls:Flyout x:Name="flyoutsControl"
+                             Header="{Binding Source={StaticResource Locator},
+                                              Path=LocalizationHelper.[Resources.Theme]}"
+                             IsPinned="False"
                              Position="Right">
                 <themes:ThemeSelectionViewModel />
             </controls:Flyout>
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
-    <DockPanel Name="dockPanel1" LastChildFill="True">
-        <WrapPanel Height="32" Margin="0,0,0,10"
-                 VerticalAlignment="Top"
-                 DockPanel.Dock="Top" >
+    <DockPanel LastChildFill="True">
+        <WrapPanel Height="32"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   DockPanel.Dock="Top">
             <TextBlock Style="{StaticResource toolbarLabel}" Text="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.NetworkInterface], StringFormat={}{0} :}" />
-            <ComboBox Name="comboBoxNetwork"
-                      Width="120"
-                      Height="28"
-                      DropDownOpened="comboBoxNetwork_DropDownOpened"
-                      SelectionChanged="comboBoxNetwork_SelectionChanged" />
-            <Rectangle Fill="{DynamicResource BlackColorBrush}" Width="2" Height="28" VerticalAlignment="Center" Margin="25,0"/>
+            <ComboBox Width="120"
+                      Height="28" VerticalContentAlignment="Center"
+                      DropDownOpened="OnComboBoxDropDownOpened"
+                      ItemsSource="{Binding ElementName=This,
+                                            Path=Networks,
+                                            UpdateSourceTrigger=PropertyChanged}"
+                      ItemContainerStyle="{StaticResource MaterialDesignComboBoxItemStyle}"
+                      SelectedIndex="0"
+                      SelectionChanged="OnComboBoxSelectionChanged" />
+            <Rectangle Width="2"
+                       Height="28"
+                       Margin="25,0"
+                       VerticalAlignment="Center"
+                       Fill="{DynamicResource BlackColorBrush}" />
             <TextBlock Style="{StaticResource toolbarLabel}">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0} : {1}">
                         <Binding Path="LocalizationHelper.[Resources.NumberOfUsers]" Source="{StaticResource Locator}" />
-                        <Binding ElementName="listViewMembers" Path="Items.Count" />
+                        <Binding ElementName="This" Path="Members.Count" />
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
 
         </WrapPanel>
-        <Grid Name="grid1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="100" MinHeight="50" />
-                <RowDefinition Height="5" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <ListBox Grid.Row="0"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 ItemsSource="{Binding ElementName=This,
+                                       Path=Members,
+                                       UpdateSourceTrigger=PropertyChanged}"
+                 PreviewMouseDoubleClick="OnUserGridDoubleClicked"
+                 Style="{StaticResource MaterialDesignCardsListBox}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type system:DateTime}">
+                    <Grid Width="200"
+                          Height="80"
+                          TextBlock.FontSize="13"
+                          TextBlock.Foreground="{DynamicResource TextBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
 
-            <ListView Name="listViewMembers"
-                      Grid.Row="0"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      SelectedItem="{Binding Source={x:Static local:MainViewModel.Instance},
-                                             Path=SelectedMember,
-                                             Mode=TwoWay,
-                                             UpdateSourceTrigger=PropertyChanged}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Width="100"
-                                        Header="{Binding Source={StaticResource Locator},
-                                                         Path=LocalizationHelper.[Resources.User]}"
-                                        HeaderContainerStyle="{StaticResource columnHeader}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Width="16"
-                                               Height="16"
-                                               Margin="0,0,2,0"
-                                               Source="{Binding Path=Icon,
-                                                                Converter={StaticResource IconConverter}}"
-                                               Stretch="UniformToFill" />
-                                        <TextBlock Text="{Binding UserName}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Width="150"
-                                        DisplayMemberBinding="{Binding MachineName}"
-                                        Header="{Binding Source={StaticResource Locator},
-                                                         Path=LocalizationHelper.[Resources.Machine]}"
-                                        HeaderContainerStyle="{StaticResource columnHeader}" />
-                        <GridViewColumn Width="150"
-                                        DisplayMemberBinding="{Binding IPAddress}"
-                                        Header="{Binding Source={StaticResource Locator},
-                                                         Path=LocalizationHelper.[Resources.IPAddress]}"
-                                        HeaderContainerStyle="{StaticResource columnHeader}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-            <GridSplitter Name="gridSplitter1"
-                          Grid.Row="1"
-                          HorizontalAlignment="Stretch"
-                          ResizeBehavior="PreviousAndNext" />
-            <Grid Name="grid2"
-                  Grid.Row="2"
-                  VerticalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"
-                                   MinHeight="30"
-                                   MaxHeight="300" />
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="*" MinHeight="30" />
-                    <RowDefinition Height="30" MinHeight="30" />
-                </Grid.RowDefinitions>
-                <DockPanel Name="attachmentPanel"
-                           Grid.Row="0"
-                           LastChildFill="True">
-                    <controls:DropDownButton Name="DownButton1"
-                                             Margin="5,1,5,1"
-                                             VerticalAlignment="Center"
-                                             Background="#673ab7"
-                                             BorderBrush="{StaticResource PrimaryHueMidBrush}"
-                                             Content="{Binding Source={StaticResource Locator},
-                                                               Path=LocalizationHelper.[Resources.Attach]}"
-                                             DockPanel.Dock="Top"
-                                             Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
-                                             ItemsSource="{Binding Source={StaticResource MenuItemAttach},
-                                                                   Path=.}"
-                                             Padding="4,0,4,0">
-                        <controls:DropDownButton.Icon>
-                            <Path Width="18"
-                                  Height="18"
-                                  Data="M552.043,0.018663C594.104,0.538098 634.535,11.9046 665.628,34.5811 736.78,86.3765 732.29,177.758 655.728,238.569L572.631,304.533 572.831,304.77 359.658,474.043C322.66,503.395 264.776,507.013 230.342,481.985 195.99,456.965 198.074,412.75 235.154,383.344L448.407,213.988 499.877,251.618 286.663,420.929C282.735,424.004 281.814,427.439 281.653,429.674 281.492,431.945 282.173,435.218 285.861,437.891 291.713,442.201 301.775,441.563 308.108,436.536L509.576,276.478 509.377,276.359 604.098,201.061C650.076,164.586 652.801,109.68 610.151,78.6749 567.5,47.5504 495.548,51.8961 449.649,88.4115L111.811,359.876C66.9557,395.594,63.7494,448.706,103.393,480.107L230.143,576.948C272.995,605.999,342.902,601.281,387.917,565.547L699.341,317.42 749.768,355.89 439.427,603.181C364.068,662.911,247.339,670.602,175.828,621.692L175.306,621.997 46.5119,523.562 46.9132,523.285C-20.19,471.049,-14.9384,382.064,60.3022,322.328L398.101,50.8236C441.189,16.6138,497.964,-0.649202,552.043,0.018663z"
-                                  Fill="{StaticResource PrimaryHueMidBrush}"
-                                  Stretch="Uniform" />
-                        </controls:DropDownButton.Icon>
-                    </controls:DropDownButton>
+                        <Button Grid.RowSpan="1"
+                                Grid.ColumnSpan="2"
+                                Width="30"
+                                Height="30"
+                                HorizontalAlignment="Right"
+                                Panel.ZIndex="3"
+                                Click="OnUserGridClicked"
+                                Style="{StaticResource MaterialDesignFloatingActionDarkButton}">
+                            <Viewbox Width="18" Height="18">
+                                <Path HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="M57.393902,18.222999L65.908203,25.682726 74.422005,33.142552 65.908203,40.602875 57.393902,48.062001 57.393902,38.629643 38.534,38.629643 38.534,27.77656 57.393902,27.77656z M0,4.0830007L0.033874728,4.0830007 12.611707,16.409894 26.624701,30.154698 40.640194,16.409894 53.2183,4.0830007 53.333,4.0830007 53.333,25.110016 35.867001,25.110016 35.867001,39.083001 0,39.083001z M3.1690004,0L26.666355,0 50.160999,0 38.411079,11.78525 26.666355,23.573 14.921633,11.78525z"
+                                      Fill="{DynamicResource TextBrush}"
+                                      Stretch="Uniform" />
+                            </Viewbox>
+                        </Button>
+                        <Border Grid.Row="0"
+                                Grid.ColumnSpan="2"
+                                Background="{DynamicResource PrimaryHueLightBrush}">
+                            <TextBlock HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="15"
+                                       FontWeight="Bold"
+                                       Text="{Binding Path=UserName}" />
+                        </Border>
+                        <Border Grid.Row="1"
+                                Grid.Column="0"
+                                Background="{DynamicResource AccentColorBrush}">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock FontWeight="Bold" Text="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.Machine]}" />
+                                <TextBlock Text="{Binding Path=MachineName}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Row="1"
+                                Grid.Column="1"
+                                Background="{DynamicResource AccentColorBrush}">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock FontWeight="Bold" Text="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.IPAddress]}" />
+                                <TextBlock Text="{Binding Path=IPAddress}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ListBox>
 
-                    <ListBox Name="listBoxAttachmentList"
-                             Margin="1,1,5,1"
-                             AllowDrop="True"
-                             Drop="listBoxAttachmentList_Drop"
-                             ItemTemplate="{StaticResource AttachmentItem}"
-                             SizeChanged="listBoxAttachmentList_SizeChanged" />
-                </DockPanel>
-                <GridSplitter Name="gridSplitter2"
-                              Grid.Row="1"
-                              HorizontalAlignment="Stretch"
-                              ResizeBehavior="PreviousAndNext" />
-                <TextBox Grid.Row="2"
-                         VerticalAlignment="Stretch"
-                         AcceptsReturn="True"
-                         AcceptsTab="True"
-                         AutoWordSelection="True"
-                         Text="{Binding Source={x:Static local:MainViewModel.Instance},
-                                        Path=Message,
-                                        Mode=TwoWay,
-                                        UpdateSourceTrigger=PropertyChanged}"
-                         TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Visible"
-                         wpf:TextFieldAssist.Hint="{Binding Source={StaticResource Locator},
-                                                            Path=LocalizationHelper.[Resources.MessageToSend]}" />
-                <StackPanel Name="stackPanel1" Grid.Row="3">
-                    <Button Name="buttonSend"
-                            Height="25"
-                            Margin="4"
-                            Command="{Binding Source={x:Static local:MainViewModel.Instance},
-                                              Path=SendCommand}"
-                            Content="{Binding Source={StaticResource Locator},
-                                              Path=LocalizationHelper.[Resources.Send]}">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
-                                <Setter Property="IsEnabled" Value="True" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=listViewMembers, Path=SelectedIndex, FallbackValue=-1}" Value="-1">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Source={x:Static local:MainViewModel.Instance}, Path=Message.Length, FallbackValue=0}" Value="0">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Grid>
     </DockPanel>
 </controls:MetroWindow>
