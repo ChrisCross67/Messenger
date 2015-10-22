@@ -61,22 +61,22 @@ namespace Messenger
 
         private void OnMembersChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if(e.NewItems != null && e.NewItems[0] != null)
-            {
-                foreach (Member newMember in e.NewItems)
-                {
-                    if (newMember.UserName.Equals(Messager.Self.UserName))
-                        continue;
-                    Members.AddMember(newMember);
-                }
-            }
             if (e.OldItems != null && e.OldItems[0] != null)
             {
                 foreach (Member oldMember in e.NewItems)
                 {
-                    if (oldMember.UserName.Equals(Messager.Self.UserName))
+                    if (oldMember.MachineName.Equals(Messager.Self.MachineName))
                         continue;
                     Members.RemoveMember(oldMember.IPAddress);
+                }
+            }
+            if (e.NewItems != null && e.NewItems[0] != null)
+            {
+                foreach (Member newMember in e.NewItems)
+                {
+                    if (newMember.MachineName.Equals(Messager.Self.MachineName))
+                        continue;
+                    Members.AddMember(newMember);
                 }
             }
         }
