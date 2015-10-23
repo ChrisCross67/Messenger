@@ -63,7 +63,7 @@ namespace Messenger
         {
             if (e.OldItems != null && e.OldItems[0] != null)
             {
-                foreach (Member oldMember in e.NewItems)
+                foreach (Member oldMember in e.OldItems)
                 {
                     if (oldMember.MachineName.Equals(Messager.Self.MachineName))
                         continue;

@@ -201,4 +201,25 @@
   <data name="Me" xml:space="preserve">
     <value>Moi</value>
   </data>
+  <data name="IgnoreAll" xml:space="preserve">
+    <value>Ignorer tout</value>
+  </data>
+  <data name="Cut" xml:space="preserve">
+    <value>Couper</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Coller</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Clair</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Sombre</value>
+  </data>
+  <data name="WriteToUser" xml:space="preserve">
+    <value>Ecrire à cet utilisateur</value>
+  </data>
 </root>

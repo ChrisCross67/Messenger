@@ -18,7 +18,7 @@
     <Style x:Key="AppThemeMenuItemStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
         <Setter Property="Command" Value="{Binding ChangeAccentCommand}" />
         <Setter Property="Icon" Value="{StaticResource AppThemeMenuIcon}" />
-        <Setter Property="Header" Value="{Binding Name, Mode=OneWay}" />
+        <Setter Property="Header" Value="{Binding Description, Mode=OneWay}" />
     </Style>
 
     <Style x:Key="AccentColorMenuItemStyle"

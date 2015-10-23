@@ -133,11 +133,47 @@ namespace Messenger.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Copy.
+        /// </summary>
+        internal static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Cut.
+        /// </summary>
+        internal static string Cut {
+            get {
+                return ResourceManager.GetString("Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Dark.
+        /// </summary>
+        internal static string Dark {
+            get {
+                return ResourceManager.GetString("Dark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Encoding.
         /// </summary>
         internal static string Encoding {
             get {
                 return ResourceManager.GetString("Encoding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Ignore All.
+        /// </summary>
+        internal static string IgnoreAll {
+            get {
+                return ResourceManager.GetString("IgnoreAll", resourceCulture);
             }
         }
         
@@ -156,6 +192,15 @@ namespace Messenger.Properties {
         internal static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Light.
+        /// </summary>
+        internal static string Light {
+            get {
+                return ResourceManager.GetString("Light", resourceCulture);
             }
         }
         
@@ -201,6 +246,15 @@ namespace Messenger.Properties {
         internal static string NumberOfUsers {
             get {
                 return ResourceManager.GetString("NumberOfUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Paste.
+        /// </summary>
+        internal static string Paste {
+            get {
+                return ResourceManager.GetString("Paste", resourceCulture);
             }
         }
         
@@ -309,6 +363,15 @@ namespace Messenger.Properties {
         internal static string VisitProjectWebsite {
             get {
                 return ResourceManager.GetString("VisitProjectWebsite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Write this user.
+        /// </summary>
+        internal static string WriteToUser {
+            get {
+                return ResourceManager.GetString("WriteToUser", resourceCulture);
             }
         }
     }

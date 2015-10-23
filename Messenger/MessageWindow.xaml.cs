@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Messenger.Extensions;
+using Messenger.Properties;
+using Messenger.Protocol;
+using Messenger.Utils;
+using Microsoft.Win32;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Messenger.Utils;
-using Messenger.Protocol;
-using Messenger.Properties;
-using Microsoft.Win32;
-using System.IO;
-using System.Collections.Specialized;
-using System.Windows.Media;
-using System.Diagnostics;
+using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace Messenger
 {
@@ -26,7 +26,6 @@ namespace Messenger
 
         private bool fileReceived = false;
 
-
         public MessagerModel MessageContext
         {
             get { return (MessagerModel)GetValue(MessageContextProperty); }
@@ -35,7 +34,7 @@ namespace Messenger
 
         // Using a DependencyProperty as the backing store for Sender.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MessageContextProperty =
-            DependencyProperty.Register("MessageContext", typeof(MessagerModel), typeof(MessageWindow), new PropertyMetadata(null,OnContextChanged));
+            DependencyProperty.Register("MessageContext", typeof(MessagerModel), typeof(MessageWindow), new PropertyMetadata(null, OnContextChanged));
 
         private static void OnContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -43,7 +42,7 @@ namespace Messenger
             if (messageWindow == null)
                 return;
 
-            if(e.NewValue != null)
+            if (e.NewValue != null)
             {
                 var context = e.NewValue as MessagerModel;
                 if (context == null)
@@ -61,13 +60,13 @@ namespace Messenger
 
         private void OnMessageAppened(object sender, NotifyCollectionChangedEventArgs e)
         {
-
         }
+
         private void CloseWindow()
         {
-            foreach (var message in MessageContext.Messages.Where(m=>m.HasAttachment))
+            foreach (var message in MessageContext.Messages.Where(m => m.HasAttachment))
             {
-                if(!fileReceived)
+                if (!fileReceived)
                     Messager.DropFiles(message);
             }
         }
@@ -82,11 +81,12 @@ namespace Messenger
                 Settings.Default.LastSendDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
                 foreach (string file in dialog.FileNames)
                 {
-                    MessagerViewModel.Instance.AttachFile(MessageContext,file);
+                    MessagerViewModel.Instance.AttachFile(MessageContext, file);
                 }
                 AutoAdjustHeight();
             }
         }
+
         private void listBoxAttachmentList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double changed_height = e.NewSize.Height - e.PreviousSize.Height;
@@ -100,21 +100,22 @@ namespace Messenger
             if (dialog.ShowDialog(this) == true)
             {
                 Settings.Default.LastSendDirectory = dialog.Folder;
-                MessagerViewModel.Instance.AttachDirectory(MessageContext,dialog.Folder);
+                MessagerViewModel.Instance.AttachDirectory(MessageContext, dialog.Folder);
                 AutoAdjustHeight();
             }
-
         }
 
         private void MenuItemClear_Click(object sender, RoutedEventArgs e)
         {
             MessageContext.Attachments.Clear();
         }
+
         private void AutoAdjustHeight()
         {
             grid2.RowDefinitions[0].Height = new GridLength(
                 23 * listBoxAttachmentList.Items.Count + 23);
         }
+
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -129,8 +130,8 @@ namespace Messenger
             if (message == null)
                 return;
             var selected = (from Checkable<Attachment> file in attachments
-                           where file.Checked
-                           select file.Item)
+                            where file.Checked
+                            select file.Item)
                               .ToArray();
 
             if (selected.Length > 0)
@@ -150,7 +151,7 @@ namespace Messenger
             }
         }
 
-        void startProgress(string name)
+        private void startProgress(string name)
         {
             //Dispatcher.Invoke(new Action(delegate()
             //{
@@ -159,13 +160,14 @@ namespace Messenger
             //}));
         }
 
-        void endProgress()
+        private void endProgress()
         {
-        //    Dispatcher.Invoke(new Action(delegate()
-        //    {
-        //        popupReceive.IsOpen = false;
-        //    }));
+            //    Dispatcher.Invoke(new Action(delegate()
+            //    {
+            //        popupReceive.IsOpen = false;
+            //    }));
         }
+
         private void buttonRemove_Click(object sender, RoutedEventArgs e)
         {
             ListBoxItem item = (ListBoxItem)listBoxAttachmentList.ContainerFromElement((DependencyObject)sender);
@@ -180,7 +182,8 @@ namespace Messenger
                 //Messager.RemoveFromFileMap((Attachment)item.DataContext);
             }
         }
-        void updateProgressBar(double progress, double speed)
+
+        private void updateProgressBar(double progress, double speed)
         {
             //Dispatcher.Invoke(new Action(delegate()
             //{
@@ -213,15 +216,75 @@ namespace Messenger
                 {
                     if (File.Exists(path))
                     {
-                        MessagerViewModel.Instance.AttachFile(MessageContext,path);
+                        MessagerViewModel.Instance.AttachFile(MessageContext, path);
                     }
                     else if (Directory.Exists(path))
                     {
-                        MessagerViewModel.Instance.AttachDirectory(MessageContext,path);
+                        MessagerViewModel.Instance.AttachDirectory(MessageContext, path);
                     }
                 }
                 AutoAdjustHeight();
             }
+        }
+
+        private void OnContextMenuOpenning(object sender, ContextMenuEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox == null)
+                return;
+            var spellCheckContextMenu = textBox.ContextMenu;
+            if (spellCheckContextMenu == null)
+                return;
+            // Clear the context menu from its previous suggestions.
+            spellCheckContextMenu.Items.Clear();
+
+            // Get the spelling error and add its suggestions to the context menu.
+            SpellingError spellingError = textBox.GetSpellingError(textBox.CaretIndex);
+            if (spellingError != null)
+            {
+                foreach (var suggestion in spellingError.Suggestions)
+                {
+                    textBox.ContextMenu.Items.Add(new MenuItem
+                    {
+                        Header = suggestion,
+                        FontWeight = FontWeights.Bold,
+                        Command = EditingCommands.CorrectSpellingError,
+                        CommandParameter = suggestion,
+                        CommandTarget = textBox
+                    });
+                }
+
+                // Add separator lines and IgnoreAll command.
+                textBox.ContextMenu.Items.Add(new Separator());
+
+                textBox.ContextMenu.Items.Add(new MenuItem
+                {
+                    Header = Properties.Resources.IgnoreAll,
+                    Command = EditingCommands.IgnoreSpellingError,
+                    CommandTarget = textBox
+                });
+
+                textBox.ContextMenu.Items.Add(new Separator());
+            }
+
+            textBox.ContextMenu.Items.Add(new MenuItem
+            {
+                Header = Properties.Resources.Cut,
+                Command = ApplicationCommands.Cut,
+                CommandTarget = textBox
+            });
+            textBox.ContextMenu.Items.Add(new MenuItem
+            {
+                Header = Properties.Resources.Copy,
+                Command = ApplicationCommands.Copy,
+                CommandTarget = textBox
+            });
+            textBox.ContextMenu.Items.Add(new MenuItem
+            {
+                Header = Properties.Resources.Paste,
+                Command = ApplicationCommands.Paste,
+                CommandTarget = textBox
+            });
         }
     }
 }

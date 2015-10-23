@@ -34,6 +34,7 @@ namespace Messenger.Themes
                         new AppThemeMenuData
                         {
                             Name = a.Name,
+                            Description = a.Name.Equals("BaseLight") ? Resources.Light : a.Name.Equals("BaseDark") ? Resources.Dark : a.Name,
                             BorderColorBrush = a.Resources["BlackColorBrush"] as Brush,
                             ColorBrush = a.Resources["WhiteColorBrush"] as Brush
                         })
@@ -86,10 +87,12 @@ namespace Messenger.Themes
 
     public class AppThemeMenuData : AccentColorMenuData
     {
+        public string Description { get; internal set; }
+
         protected override void DoChangeTheme(object sender)
         {
             var theme = ThemeManager.DetectAppStyle(Application.Current.MainWindow);
-            var appTheme = ThemeManager.GetAppTheme(this.Name);
+            var appTheme = ThemeManager.GetAppTheme(Name);
             ThemeManager.ChangeAppStyle(Application.Current, theme.Item2, appTheme);
             Settings.Default.AppTheme = Name;
             Settings.Default.Save();

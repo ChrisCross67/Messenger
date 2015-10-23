@@ -10,7 +10,7 @@
                       Name="messageWindow"
                       Title="{Binding Member.UserName}"
                       Width="500"
-                      Height="400"
+                      Height="400" 
                       AllowsTransparency="True"
                       Closing="OnClosing"
                       FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
@@ -152,11 +152,15 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Margin="8"
-                                   HorizontalAlignment="Right"
-                                   Foreground="White"
-                                   Text="{Binding Content}"
-                                   TextWrapping="Wrap" />
+                        <TextBox Margin="8"
+                                 HorizontalAlignment="Right"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Foreground="White"
+                                 IsReadOnly="True"
+                                 Text="{Binding Content}"
+                                 TextWrapping="Wrap"/>
+
                         <Border Grid.RowSpan="2"
                                 Grid.Column="1"
                                 Background="{DynamicResource PrimaryHueLightBrush}"
@@ -223,11 +227,14 @@
         <ScrollViewer Margin="5"
                       HorizontalAlignment="Stretch"
                       VerticalScrollBarVisibility="Auto">
-            <ItemsControl x:Name="ItemsControlMessage" Background="Transparent"
-                          FontSize="13" ScrollViewer.CanContentScroll="True" VirtualizingStackPanel.IsVirtualizing="True"
+            <ItemsControl x:Name="ItemsControlMessage"
+                          Background="Transparent"
+                          FontSize="13"
                           ItemsSource="{Binding Path=Messages,
                                                 Mode=OneWay,
-                                                UpdateSourceTrigger=PropertyChanged}">
+                                                UpdateSourceTrigger=PropertyChanged}"
+                          ScrollViewer.CanContentScroll="True"
+                          VirtualizingStackPanel.IsVirtualizing="True">
                 <ItemsControl.ItemTemplateSelector>
                     <local:MessageItemTemplateSelector SelfTemplate="{StaticResource SelfTemplate}" SenderTemplate="{StaticResource SenderTemplate}" />
                 </ItemsControl.ItemTemplateSelector>
@@ -280,17 +287,23 @@
             <GridSplitter Grid.Row="1"
                           HorizontalAlignment="Stretch"
                           ResizeBehavior="PreviousAndNext" />
+
             <TextBox Grid.Row="2"
                      VerticalAlignment="Stretch"
                      AcceptsReturn="True"
                      AcceptsTab="True"
                      AutoWordSelection="True"
+                     SpellCheck.IsEnabled="True"
                      Text="{Binding Path=MessageToSend,
                                     Mode=TwoWay,
                                     UpdateSourceTrigger=PropertyChanged}"
-                     TextWrapping="Wrap"
+                     TextWrapping="Wrap" ContextMenuOpening="OnContextMenuOpenning"
                      wpf:TextFieldAssist.Hint="{Binding Source={StaticResource Locator},
-                                                        Path=LocalizationHelper.[Resources.MessageToSend]}" />
+                                                        Path=LocalizationHelper.[Resources.MessageToSend]}" >
+                <TextBox.ContextMenu>
+                    <ContextMenu Style="{StaticResource MetroContextMenu}" ContextMenuOpening="OnContextMenuOpenning"/>
+                </TextBox.ContextMenu>
+            </TextBox>
         </Grid>
         <Button Name="buttonSend"
                 Grid.Row="3"

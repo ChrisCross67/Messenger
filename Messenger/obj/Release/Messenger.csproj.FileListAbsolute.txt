@@ -8,7 +8,6 @@ C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\bin
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\bin\Release\MaterialDesignThemes.Wpf.dll
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\bin\Release\System.Windows.Interactivity.dll
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\bin\Release\MahApps.Metro.xml
-C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.csprojResolveAssemblyReference.cache
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\AboutWindow.baml
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\AboutWindow.g.cs
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\MainWindow.g.cs
@@ -30,3 +29,4 @@ C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.exe
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.pdb
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Themes\Generic.baml
+C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.csprojResolveAssemblyReference.cache
