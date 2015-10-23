@@ -367,7 +367,7 @@ namespace Messenger.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Write this user.
+        ///   Recherche une chaîne localisée semblable à Write to this user.
         /// </summary>
         internal static string WriteToUser {
             get {

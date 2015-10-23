@@ -3,6 +3,7 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:converter="clr-namespace:Messenger.Converters"
+                      xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                       xmlns:local="clr-namespace:Messenger"
                       xmlns:sys="clr-namespace:System;assembly=mscorlib"
                       xmlns:utils="clr-namespace:Messenger.Utils"
@@ -10,7 +11,7 @@
                       Name="messageWindow"
                       Title="{Binding Member.UserName}"
                       Width="500"
-                      Height="400" 
+                      Height="400"
                       AllowsTransparency="True"
                       Closing="OnClosing"
                       FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
@@ -23,6 +24,77 @@
         <converter:IconConverter x:Key="IconConverter" />
         <converter:FileIconConverter x:Key="FileIconConverter" />
         <converter:FileSizeConverter x:Key="FileSizeConverter" />
+
+
+
+        <converters:TextFieldHintVisibilityConverter x:Key="TextFieldHintVisibilityConverter" />
+
+        <Style x:Key="SelfMessageMaterialDesignTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignTextBoxBorder}" />
+            <Setter Property="BorderThickness" Value="0 0 0 1"/>
+            <Setter Property="wpf:TextFieldAssist.TextBoxViewMargin" Value="1 0 1 0" />
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="CaretBrush" Value="{Binding RelativeSource={RelativeSource Self}, Path=BorderBrush}"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource MaterialDesignValidationErrorTemplate}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <Border x:Name="border"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                SnapsToDevicePixels="True"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Padding="0 4 0 4">
+                                <Grid Margin="{TemplateBinding Padding}">
+                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                                              />
+                                    <TextBlock Text="{Binding Path=(wpf:TextFieldAssist.Hint), RelativeSource={RelativeSource TemplatedParent}}"
+                                           Visibility="{TemplateBinding Text, Converter={StaticResource TextFieldHintVisibilityConverter}}"
+                                           IsHitTestVisible="False"
+                                           x:Name="Hint"
+                                           Margin="1 0 1 0"
+                                           Opacity="{Binding Path=(wpf:TextFieldAssist.HintOpacity), RelativeSource={RelativeSource TemplatedParent}}"/>
+                                </Grid>
+                            </Border>
+                            <wpf:Underline x:Name="Underline"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="False">
+                                <Setter TargetName="Underline" Property="IsActive" Value="True"/>
+                            </Trigger>
+                            <Trigger Property="Validation.HasError" Value="true">
+                                <Setter Property="BorderBrush" Value="{DynamicResource ValidationErrorBrush}"/>
+                                <Setter TargetName="Underline" Property="Background" Value="{DynamicResource ValidationErrorBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
         <x:Array x:Key="MenuItemAttach" Type="{x:Type MenuItem}">
             <MenuItem Click="buttonAttach_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFile]}" />
             <MenuItem Click="MenuItemAttachFolder_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFolders]}" />
@@ -92,12 +164,21 @@
                                 TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}">
                             <TextBlock Text="{Binding Path=Date, StringFormat={}{0:d}&#x0a;{0:T}}" />
                         </Border>
-                        <TextBlock Grid.Column="1"
-                                   Margin="8"
-                                   HorizontalAlignment="Left"
-                                   Foreground="{DynamicResource TextBrush}"
-                                   Text="{Binding Content}"
-                                   TextWrapping="Wrap" />
+                        <TextBox Grid.Column="1"
+                                 Margin="8"
+                                 HorizontalAlignment="Left"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Foreground="{DynamicResource TextBrush}"
+                                 IsReadOnly="True"
+                                 Text="{Binding Content}"
+                                 TextWrapping="Wrap">
+                            <TextBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="ApplicationCommands.Copy" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.Copy]}" />
+                                </ContextMenu>
+                            </TextBox.ContextMenu>
+                        </TextBox>
                         <Expander Grid.Row="1"
                                   Grid.Column="1"
                                   Header="{Binding Source={StaticResource Locator},
@@ -155,11 +236,19 @@
                         <TextBox Margin="8"
                                  HorizontalAlignment="Right"
                                  Background="Transparent"
-                                 BorderThickness="0"
+                                 BorderBrush="White"
+                                 BorderThickness="0 0 0 2"
                                  Foreground="White"
                                  IsReadOnly="True"
                                  Text="{Binding Content}"
-                                 TextWrapping="Wrap"/>
+                                 Style="{StaticResource SelfMessageMaterialDesignTextBox}"
+                                 TextWrapping="Wrap">
+                            <TextBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="ApplicationCommands.Copy" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.Copy]}" />
+                                </ContextMenu>
+                            </TextBox.ContextMenu>
+                        </TextBox>
 
                         <Border Grid.RowSpan="2"
                                 Grid.Column="1"
@@ -293,15 +382,16 @@
                      AcceptsReturn="True"
                      AcceptsTab="True"
                      AutoWordSelection="True"
+                     ContextMenuOpening="OnContextMenuOpenning"
                      SpellCheck.IsEnabled="True"
                      Text="{Binding Path=MessageToSend,
                                     Mode=TwoWay,
                                     UpdateSourceTrigger=PropertyChanged}"
-                     TextWrapping="Wrap" ContextMenuOpening="OnContextMenuOpenning"
+                     TextWrapping="Wrap"
                      wpf:TextFieldAssist.Hint="{Binding Source={StaticResource Locator},
-                                                        Path=LocalizationHelper.[Resources.MessageToSend]}" >
+                                                        Path=LocalizationHelper.[Resources.MessageToSend]}">
                 <TextBox.ContextMenu>
-                    <ContextMenu Style="{StaticResource MetroContextMenu}" ContextMenuOpening="OnContextMenuOpenning"/>
+                    <ContextMenu ContextMenuOpening="OnContextMenuOpenning" Style="{StaticResource MetroContextMenu}" />
                 </TextBox.ContextMenu>
             </TextBox>
         </Grid>

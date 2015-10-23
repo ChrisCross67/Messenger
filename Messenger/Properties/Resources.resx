@@ -217,6 +217,6 @@
     <value>Dark</value>
   </data>
   <data name="WriteToUser" xml:space="preserve">
-    <value>Write this user</value>
+    <value>Write to this user</value>
   </data>
 </root>
