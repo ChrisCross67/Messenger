@@ -9,205 +9,87 @@
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
-
         <ResourceDictionary>
-            <locator:ViewModelLocator x:Key="Locator" />
+
             <ResourceDictionary.MergedDictionaries>
+
                 <!-- MahApps -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/mahapps.xaml" />-->
 
-                <!-- Material -->
+                <!-- Material Design -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
 
-                <!-- primary color -->
-                <ResourceDictionary>
-                    <!-- include your primary palette -->
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.DeepPurple.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-                    <!--
-                            include three hues from the primary palette (and the associated forecolours).
-                            Do not rename, keep in sequence; light to dark.
-                        -->
-                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary100}"/>
-                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary100Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary500}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary500Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary700}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary700Foreground}"/>
+                <!-- Material Design: MahApps Compatibility -->
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml "/>-->
 
-                    <!-- MAHAPPS BRUSHES -->
-                    <SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource Primary700}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource Primary500}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="AccentColorBrush2" Color="{StaticResource Primary400}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="AccentColorBrush3" Color="{StaticResource Primary300}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="AccentColorBrush4" Color="{StaticResource Primary200}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="WindowTitleColorBrush" Color="{StaticResource Primary700}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="AccentSelectedColorBrush" Color="{StaticResource Primary500Foreground}" options:Freeze="True" />
-
-                    <LinearGradientBrush x:Key="ProgressBrush" EndPoint="0.001,0.5" StartPoint="1.002,0.5" options:Freeze="True">
-                        <GradientStop Color="{StaticResource Primary700}" Offset="0" />
-                        <GradientStop Color="{StaticResource Primary300}" Offset="1" />
-                    </LinearGradientBrush>
-                    <SolidColorBrush x:Key="CheckmarkFill" Color="{StaticResource Primary500}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="RightArrowFill" Color="{StaticResource Primary500}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="IdealForegroundColorBrush" Color="{StaticResource Primary500Foreground}" options:Freeze="True" />
-                    <SolidColorBrush x:Key="IdealForegroundDisabledBrush" Color="{StaticResource Primary500}" Opacity="0.4" options:Freeze="True" />
-
-                </ResourceDictionary>
-
-                <!-- secondary colour -->
-                <ResourceDictionary>
-                    <!-- include your secondary pallette -->
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Lime.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-
-                    <!-- include a single secondary accent color (and the associated forecolour) -->
-                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Accent200}"/>
-                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Accent200Foreground}"/>
-                </ResourceDictionary>
-
-                <ResourceDictionary>
-                    <Style x:Key="FocusVisual">
-                        <Setter Property="Control.Template">
-                            <Setter.Value>
-                                <ControlTemplate>
-                                    <Rectangle Margin="2 2 2 2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <Style x:Key="MaterialDesignComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
-                        <Setter Property="SnapsToDevicePixels" Value="True"/>
-                        <Setter Property="Padding" Value="8"/>
-                        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-                        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderBrush" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                                    <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{DynamicResource WhiteBrush}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
-                                        <ContentPresenter TextBlock.Foreground="{DynamicResource TextBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter Property="Opacity" TargetName="Bd" Value="0.56"/>
-                                        </Trigger>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsSelected" Value="False"/>
-                                                <Condition Property="IsMouseOver" Value="True"/>
-                                                <Condition Property="IsKeyboardFocused" Value="False"/>
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource GrayHoverBrush}"/>
-                                        </MultiTrigger>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsSelected" Value="True"/>
-                                                <Condition Property="IsMouseOver" Value="False"/>
-                                                <Condition Property="IsKeyboardFocused" Value="True"/>
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource GrayNormalBrush}"/>
-                                        </MultiTrigger>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsSelected" Value="True"/>
-                                                <Condition Property="IsMouseOver" Value="True"/>
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource GrayNormalBrush}"/>
-                                        </MultiTrigger>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsSelected" Value="True"/>
-                                                <Condition Property="IsMouseOver" Value="False"/>
-                                                <Condition Property="IsKeyboardFocused" Value="False"/>
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource GrayNormalBrush}"/>
-                                        </MultiTrigger>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsSelected" Value="False"/>
-                                                <Condition Property="IsMouseOver" Value="False"/>
-                                                <Condition Property="IsKeyboardFocused" Value="True"/>
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource GrayHoverBrush}"/>
-                                        </MultiTrigger>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsSelected" Value="False"/>
-                                                <Condition Property="IsMouseOver" Value="True"/>
-                                                <Condition Property="IsKeyboardFocused" Value="True"/>
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource GrayHoverBrush}"/>
-                                        </MultiTrigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <Style TargetType="{x:Type utils:ImageButton}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type utils:ImageButton}">
-                                    <Border Name="Border" BorderThickness="0">
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0,0,0.25,1" />
-                                        </Border.Background>
-                                        <ContentPresenter RecognizesAccessKey="True"></ContentPresenter>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Border" Property="Background">
-                                                <Setter.Value>
-                                                    <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
-                                                Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0.25,0,0.25,1" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="Border" Property="Background">
-                                                <Setter.Value>
-                                                    <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
-                                                Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0.5,0,0.25,1" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="Border" Property="Background">
-                                                <Setter.Value>
-                                                    <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
-                                                Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0.75,0,0.25,1" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <Style TargetType="ContextMenu" BasedOn="{StaticResource MetroContextMenu}"/>
-                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
-        </ResourceDictionary>
+            <!-- MahApps Brushes -->
+            <SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource Primary700}"/>
+            <SolidColorBrush x:Key="AccentColorBrush" Color="{DynamicResource Primary500}"/>
+            <SolidColorBrush x:Key="AccentColorBrush2" Color="{DynamicResource Primary400}"/>
+            <SolidColorBrush x:Key="AccentColorBrush3" Color="{DynamicResource Primary300}"/>
+            <SolidColorBrush x:Key="AccentColorBrush4" Color="{DynamicResource Primary200}"/>
+            <SolidColorBrush x:Key="WindowTitleColorBrush" Color="{DynamicResource Primary700}"/>
+            <SolidColorBrush x:Key="AccentSelectedColorBrush" Color="{DynamicResource Primary500Foreground}"/>
+            <LinearGradientBrush x:Key="ProgressBrush" EndPoint="0.001,0.5" StartPoint="1.002,0.5">
+                <GradientStop Color="{DynamicResource Primary700}" Offset="0"/>
+                <GradientStop Color="{DynamicResource Primary300}" Offset="1"/>
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="CheckmarkFill" Color="{DynamicResource Primary500}"/>
+            <SolidColorBrush x:Key="RightArrowFill" Color="{DynamicResource Primary500}"/>
+            <SolidColorBrush x:Key="IdealForegroundColorBrush" Color="{DynamicResource Primary500Foreground}"/>
+            <SolidColorBrush x:Key="IdealForegroundDisabledBrush" Color="{DynamicResource Primary500}" Opacity="0.4"/>
 
+            <locator:ViewModelLocator x:Key="Locator"/>
+            <Style TargetType="{x:Type utils:ImageButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type utils:ImageButton}">
+                            <Border Name="Border" BorderThickness="0">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0,0,0.25,1" />
+                                </Border.Background>
+                                <ContentPresenter RecognizesAccessKey="True"></ContentPresenter>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Border" Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0.25,0,0.25,1" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Border" Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0.5,0,0.25,1" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Border" Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="{Binding Path=Image, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" Viewbox="0.75,0,0.25,1" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

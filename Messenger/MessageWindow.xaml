@@ -30,56 +30,62 @@
         <converters:TextFieldHintVisibilityConverter x:Key="TextFieldHintVisibilityConverter" />
 
         <Style x:Key="SelfMessageMaterialDesignTextBox" TargetType="{x:Type TextBox}">
-            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
+            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
             <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignTextBoxBorder}" />
-            <Setter Property="BorderThickness" Value="0 0 0 1"/>
+            <Setter Property="BorderThickness" Value="0 0 0 1" />
             <Setter Property="wpf:TextFieldAssist.TextBoxViewMargin" Value="1 0 1 0" />
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="CaretBrush" Value="{Binding RelativeSource={RelativeSource Self}, Path=BorderBrush}"/>
-            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Top"/>
-            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="AllowDrop" Value="true"/>
-            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource MaterialDesignValidationErrorTemplate}"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CaretBrush" Value="{Binding RelativeSource={RelativeSource Self}, Path=BorderBrush}" />
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="AllowDrop" Value="true" />
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource MaterialDesignValidationErrorTemplate}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
                         <Grid VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                             <Border x:Name="border"
-                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
-                                Background="{TemplateBinding Background}"
-                                SnapsToDevicePixels="True"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                Padding="0 4 0 4">
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Padding="0 4 0 4"
+                                    SnapsToDevicePixels="True">
                                 <Grid Margin="{TemplateBinding Padding}">
-                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
-                                              />
-                                    <TextBlock Text="{Binding Path=(wpf:TextFieldAssist.Hint), RelativeSource={RelativeSource TemplatedParent}}"
-                                           Visibility="{TemplateBinding Text, Converter={StaticResource TextFieldHintVisibilityConverter}}"
-                                           IsHitTestVisible="False"
-                                           x:Name="Hint"
-                                           Margin="1 0 1 0"
-                                           Opacity="{Binding Path=(wpf:TextFieldAssist.HintOpacity), RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <ScrollViewer x:Name="PART_ContentHost"
+                                                  Focusable="false"
+                                                  HorizontalScrollBarVisibility="Hidden"
+                                                  VerticalScrollBarVisibility="Hidden" />
+                                    <TextBlock x:Name="Hint"
+                                               Margin="1 0 1 0"
+                                               IsHitTestVisible="False"
+                                               Opacity="{Binding Path=(wpf:TextFieldAssist.HintOpacity),
+                                                                 RelativeSource={RelativeSource TemplatedParent}}"
+                                               Text="{Binding Path=(wpf:TextFieldAssist.Hint),
+                                                              RelativeSource={RelativeSource TemplatedParent}}"
+                                               Visibility="{TemplateBinding Text,
+                                                                            Converter={StaticResource TextFieldHintVisibilityConverter}}" />
                                 </Grid>
                             </Border>
-                            <wpf:Underline x:Name="Underline"/>
+                            <wpf:Underline x:Name="Underline" />
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.56" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="BorderBrush" Value="White"/>
+                                <Setter Property="BorderBrush" Value="White" />
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="False">
-                                <Setter TargetName="Underline" Property="IsActive" Value="True"/>
+                                <Setter TargetName="Underline" Property="IsActive" Value="True" />
                             </Trigger>
                             <Trigger Property="Validation.HasError" Value="true">
-                                <Setter Property="BorderBrush" Value="{DynamicResource ValidationErrorBrush}"/>
-                                <Setter TargetName="Underline" Property="Background" Value="{DynamicResource ValidationErrorBrush}"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource ValidationErrorBrush}" />
+                                <Setter TargetName="Underline" Property="Background" Value="{DynamicResource ValidationErrorBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -88,10 +94,10 @@
             <Style.Triggers>
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
-                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
-                        <Condition Property="IsSelectionActive" Value="false"/>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true" />
+                        <Condition Property="IsSelectionActive" Value="false" />
                     </MultiTrigger.Conditions>
-                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
                 </MultiTrigger>
             </Style.Triggers>
         </Style>
@@ -124,7 +130,18 @@
                            TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
             </DockPanel>
         </DataTemplate>
-
+        <DataTemplate x:Key="SendAttachmentItem">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="16"
+                       Height="16"
+                       Margin="0,0,4,0"
+                       DockPanel.Dock="Left"
+                       Source="{Binding Path=Item.FullPath,
+                                        Converter={StaticResource FileIconConverter}}"
+                       Stretch="UniformToFill" />
+                <TextBlock Text="{Binding Item.Name}" TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate x:Key="ReceiveAttachmentItem">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding Checked}" />
@@ -195,7 +212,7 @@
                                          ItemTemplate="{StaticResource ReceiveAttachmentItem}"
                                          ItemsSource="{Binding Path=.,
                                                                Converter={StaticResource ToCheckable}}" />
-                                <Button Name="buttonSave"
+                                <!--<Button Name="buttonSave"
                                         Width="40"
                                         Height="28"
                                         Margin="5,4,5,4"
@@ -205,7 +222,39 @@
                                         Content="{Binding Source={StaticResource Locator},
                                                           Path=LocalizationHelper.[Resources.Save]}"
                                         Padding="2"
-                                        Tag="{Binding ElementName=listBoxAttachmentList}" />
+                                        Tag="{Binding ElementName=listBoxAttachmentList}" />-->
+                                <Button VerticalAlignment="Stretch" Margin="5,4"
+                                        Background="{DynamicResource AccentColorBrush}"
+                                        Foreground="White" Click="buttonSave_Click" Tag="{Binding ElementName=listBoxAttachmentList}"
+                                        ToolTip="{Binding Source={StaticResource Locator},
+                                                          Path=LocalizationHelper.[Resources.Save]}">
+                                    <Rectangle Width="15"
+                                               Height="15"
+                                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                                              Path=Foreground}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill">
+                                                <VisualBrush.Visual>
+                                                    <Path Width="20"
+                                                          Height="20"
+                                                          Data="M49.248333,33.410351C49.317642,33.411007 49.355511,33.413555 49.355511,33.413555 54.514007,33.563538 54.550003,38.093037 54.550003,38.093037L54.745983,62.030392C53.738083,65.51001 50.743378,65.32003 50.743378,65.32003 47.508694,64.940071 46.907753,62.100384 46.907753,62.100384L46.747768,42.312572C47.257717,40.142811 48.56559,40.052822 49.448501,40.052822 51.979256,40.06282 52.107242,42.352566 52.107242,42.352566L52.239231,58.500782 50.687382,58.520779 50.557396,42.682529C50.511398,41.552654 49.809467,41.372673 49.382507,41.41267 48.523594,41.482662 48.190624,42.622536 48.190624,42.622536L48.261619,51.411564 48.349609,62.090385C49.602489,63.87019 50.729378,63.710205 50.729378,63.710205 52.895164,63.93018 53.384117,61.69043 53.384117,61.69043L53.194137,38.502991C52.896164,34.613422 49.24752,34.773403 49.24752,34.773403 45.3969,35.173359 45.677872,38.403004 45.677872,38.403004L45.828857,56.960953 44.386997,56.970951 44.230015,37.933056C44.970344,33.574474,48.578342,33.404003,49.248333,33.410351z M19.417,8.7200003L25.077,8.7200003 25.077,20.264 19.417,20.264z M7.6670007,8.6700001L15.142873,8.6700001 15.142873,22.53186 44.772419,22.53186 44.772419,8.6700001 52.521,8.6700001 52.521,32.210373 52.514782,32.207195C51.59882,31.766569 50.571785,31.519785 49.487007,31.519785 45.631016,31.519785 42.504024,34.639633 42.504024,38.499451L42.504024,43.641003 15.341999,43.641003 15.341999,48.223 42.504024,48.223 42.504024,54.011002 7.6670007,54.011002z M11.75,0.06000058L17.41,0.06000058 17.41,6.0000005 11.75,6.0000005z M37.105419,0L44.854,0 44.854,6.0000005 42.10524,6.0000005 42.10524,6.0100532 37.105419,6.0100532z M0,0L7.4758128,0 7.4758128,6.0000005 5.0000004,6.0000005 5.0000004,45.341003 0,45.341003z"
+                                                          Fill="Red"
+                                                          RenderTransformOrigin="0.5,0.5"
+                                                          Stretch="Uniform">
+                                                        <Path.RenderTransform>
+                                                            <TransformGroup>
+                                                                <TransformGroup.Children>
+                                                                    <RotateTransform Angle="0" />
+                                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                                </TransformGroup.Children>
+                                                            </TransformGroup>
+                                                        </Path.RenderTransform>
+                                                    </Path>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>
                             </StackPanel>
                         </Expander>
                     </Grid>
@@ -240,8 +289,8 @@
                                  BorderThickness="0 0 0 2"
                                  Foreground="White"
                                  IsReadOnly="True"
-                                 Text="{Binding Content}"
                                  Style="{StaticResource SelfMessageMaterialDesignTextBox}"
+                                 Text="{Binding Content}"
                                  TextWrapping="Wrap">
                             <TextBox.ContextMenu>
                                 <ContextMenu>
@@ -261,16 +310,23 @@
                         <Expander Grid.Row="1"
                                   Grid.Column="0"
                                   Header="{Binding Source={StaticResource Locator},
-                                                   Path=LocalizationHelper.[Resources.Attachment]}"
-                                  Visibility="{Binding Path=HasAttachment,
-                                                       UpdateSourceTrigger=PropertyChanged,
-                                                       Converter={StaticResource BooleanToVisibility}}">
+                                                   Path=LocalizationHelper.[Resources.Attachment]}">
+                            <Expander.Style>
+                                <Style BasedOn="{StaticResource {x:Type Expander}}" TargetType="Expander">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Attachments.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Expander.Style>
                             <ListBox Name="listBoxAttachmentList"
                                      MinHeight="28"
                                      MaxHeight="90"
                                      Margin="0,4,0,4"
                                      DataContext="{Binding Path=Attachments}"
-                                     ItemTemplate="{StaticResource ReceiveAttachmentItem}"
+                                     ItemTemplate="{StaticResource SendAttachmentItem}"
                                      ItemsSource="{Binding Path=.,
                                                            Converter={StaticResource ToCheckable}}" />
                         </Expander>
@@ -285,7 +341,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <!--<Popup Name="popupReceive"
                Width="400"
@@ -329,40 +384,29 @@
                 </ItemsControl.ItemTemplateSelector>
             </ItemsControl>
         </ScrollViewer>
-        <GridSplitter Name="gridSplitter2"
+        <Rectangle Grid.Row="1"
+                   Height="1"
+                   HorizontalAlignment="Stretch"
+                   Fill="{DynamicResource BlackColorBrush}" />
+        <!--<GridSplitter Name="gridSplitter2"
                       Grid.Row="1"
                       HorizontalAlignment="Stretch"
-                      ResizeBehavior="PreviousAndNext" />
+                      ResizeBehavior="PreviousAndNext" />-->
         <Grid Name="grid2" Grid.Row="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MaxHeight="150" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MaxHeight="150" />
             </Grid.RowDefinitions>
 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="50" />
+            </Grid.ColumnDefinitions>
             <DockPanel Name="attachmentPanel"
                        Grid.Row="0"
+                       Grid.ColumnSpan="2"
                        LastChildFill="True">
-                <controls:DropDownButton Name="DownButton1"
-                                         Margin="5,1,5,1"
-                                         VerticalAlignment="Center"
-                                         Background="#673ab7"
-                                         BorderBrush="{StaticResource PrimaryHueMidBrush}"
-                                         Content="{Binding Source={StaticResource Locator},
-                                                           Path=LocalizationHelper.[Resources.Attach]}"
-                                         DockPanel.Dock="Top"
-                                         Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
-                                         ItemsSource="{Binding Source={StaticResource MenuItemAttach},
-                                                               Path=.}"
-                                         Padding="4,0,4,0">
-                    <controls:DropDownButton.Icon>
-                        <Path Width="18"
-                              Height="18"
-                              Data="M552.043,0.018663C594.104,0.538098 634.535,11.9046 665.628,34.5811 736.78,86.3765 732.29,177.758 655.728,238.569L572.631,304.533 572.831,304.77 359.658,474.043C322.66,503.395 264.776,507.013 230.342,481.985 195.99,456.965 198.074,412.75 235.154,383.344L448.407,213.988 499.877,251.618 286.663,420.929C282.735,424.004 281.814,427.439 281.653,429.674 281.492,431.945 282.173,435.218 285.861,437.891 291.713,442.201 301.775,441.563 308.108,436.536L509.576,276.478 509.377,276.359 604.098,201.061C650.076,164.586 652.801,109.68 610.151,78.6749 567.5,47.5504 495.548,51.8961 449.649,88.4115L111.811,359.876C66.9557,395.594,63.7494,448.706,103.393,480.107L230.143,576.948C272.995,605.999,342.902,601.281,387.917,565.547L699.341,317.42 749.768,355.89 439.427,603.181C364.068,662.911,247.339,670.602,175.828,621.692L175.306,621.997 46.5119,523.562 46.9132,523.285C-20.19,471.049,-14.9384,382.064,60.3022,322.328L398.101,50.8236C441.189,16.6138,497.964,-0.649202,552.043,0.018663z"
-                              Fill="{StaticResource PrimaryHueMidBrush}"
-                              Stretch="Uniform" />
-                    </controls:DropDownButton.Icon>
-                </controls:DropDownButton>
 
                 <ListBox Name="listBoxAttachmentList"
                          Margin="1,1,5,1"
@@ -373,12 +417,20 @@
                          SizeChanged="listBoxAttachmentList_SizeChanged" />
             </DockPanel>
 
-            <GridSplitter Grid.Row="1"
+            <!--<GridSplitter Grid.Row="1"
+                          Grid.ColumnSpan="2"
                           HorizontalAlignment="Stretch"
-                          ResizeBehavior="PreviousAndNext" />
+                          ResizeBehavior="PreviousAndNext" />-->
+            <Rectangle Grid.Row="1"
+                       Grid.ColumnSpan="2"
+                       Height="1"
+                       HorizontalAlignment="Stretch"
+                       Fill="{DynamicResource BlackColorBrush}" />
 
             <TextBox Grid.Row="2"
+                     HorizontalAlignment="Stretch"
                      VerticalAlignment="Stretch"
+                     VerticalContentAlignment="Stretch"
                      AcceptsReturn="True"
                      AcceptsTab="True"
                      AutoWordSelection="True"
@@ -394,29 +446,95 @@
                     <ContextMenu ContextMenuOpening="OnContextMenuOpenning" Style="{StaticResource MetroContextMenu}" />
                 </TextBox.ContextMenu>
             </TextBox>
-        </Grid>
-        <Button Name="buttonSend"
-                Grid.Row="3"
-                Height="25"
-                Margin="4"
-                Command="{Binding Source={x:Static local:MessagerViewModel.Instance},
-                                  Path=SendCommand}"
-                CommandParameter="{Binding ElementName=messageWindow,
-                                           Path=DataContext}"
-                Content="{Binding Source={StaticResource Locator},
-                                  Path=LocalizationHelper.[Resources.Send]}">
-            <Button.Style>
-                <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
-                    <Setter Property="IsEnabled" Value="True" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=MessageToSend.Length, FallbackValue=0}" Value="0">
-                            <Setter Property="IsEnabled" Value="False" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
+            <StackPanel Grid.Row="2" Grid.Column="1">
+                <Button VerticalAlignment="Stretch"
+                        Background="{DynamicResource AccentColorBrush}"
+                        Command="{Binding Source={x:Static local:MessagerViewModel.Instance},
+                                          Path=SendCommand}"
+                        CommandParameter="{Binding ElementName=messageWindow,
+                                                   Path=DataContext}"
+                        Foreground="White"
+                        ToolTip="{Binding Source={StaticResource Locator},
+                                          Path=LocalizationHelper.[Resources.Send]}">
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                            <Setter Property="IsEnabled" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=MessageToSend.Length, FallbackValue=0}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Rectangle Width="15"
+                               Height="15"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill">
+                                <VisualBrush.Visual>
+                                    <Path Width="20"
+                                          Height="20"
+                                          Data="M0,7.9089998L5.388,7.9089998 5.388,8.7969998 0,8.7969998z M14.330786,7.0470003L17.071744,9.2382334 19.811203,7.0470003 26.758999,11.251 7.3829999,11.251z M0,4.9669999L5.388,4.9669999 5.388,5.8549999 0,5.8549999z M0,2.0259996L5.388,2.0259996 5.388,2.9139999 0,2.9139999z M26.967,1.0829999L26.967,10.221 20.444,6.2626389z M7.3829999,1.0829999L13.905,6.2626389 7.3829999,10.221z M7.3829999,0L26.758999,0 17.071744,7.7509998z"
+                                          Fill="Red"
+                                          RenderTransformOrigin="0.5,0.5"
+                                          Stretch="Uniform">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <TransformGroup.Children>
+                                                    <RotateTransform Angle="0" />
+                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                </TransformGroup.Children>
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
 
+                <controls:DropDownButton Name="DownButton1"
+                                         VerticalAlignment="Stretch"
+                                         Foreground="White"
+                                         ItemsSource="{Binding Source={StaticResource MenuItemAttach},
+                                                               Path=.}"
+                                         ToolTip="{Binding Source={StaticResource Locator},
+                                                           Path=LocalizationHelper.[Resources.Attach]}">
+                    <controls:DropDownButton.Content>
+                        <Rectangle Width="15"
+                                   Height="15"
+                                   Fill="{Binding RelativeSource={RelativeSource AncestorType=controls:DropDownButton},
+                                                  Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill">
+                                    <VisualBrush.Visual>
+                                        <Path Width="20"
+                                              Height="20"
+                                              Data="M552.043,0.018663C594.104,0.538098 634.535,11.9046 665.628,34.5811 736.78,86.3765 732.29,177.758 655.728,238.569L572.631,304.533 572.831,304.77 359.658,474.043C322.66,503.395 264.776,507.013 230.342,481.985 195.99,456.965 198.074,412.75 235.154,383.344L448.407,213.988 499.877,251.618 286.663,420.929C282.735,424.004 281.814,427.439 281.653,429.674 281.492,431.945 282.173,435.218 285.861,437.891 291.713,442.201 301.775,441.563 308.108,436.536L509.576,276.478 509.377,276.359 604.098,201.061C650.076,164.586 652.801,109.68 610.151,78.6749 567.5,47.5504 495.548,51.8961 449.649,88.4115L111.811,359.876C66.9557,395.594,63.7494,448.706,103.393,480.107L230.143,576.948C272.995,605.999,342.902,601.281,387.917,565.547L699.341,317.42 749.768,355.89 439.427,603.181C364.068,662.911,247.339,670.602,175.828,621.692L175.306,621.997 46.5119,523.562 46.9132,523.285C-20.19,471.049,-14.9384,382.064,60.3022,322.328L398.101,50.8236C441.189,16.6138,497.964,-0.649202,552.043,0.018663z"
+                                              Fill="Red"
+                                              RenderTransformOrigin="0.5,0.5"
+                                              Stretch="Uniform">
+                                            <Path.RenderTransform>
+                                                <TransformGroup>
+                                                    <TransformGroup.Children>
+                                                        <RotateTransform Angle="0" />
+                                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                    </TransformGroup.Children>
+                                                </TransformGroup>
+                                            </Path.RenderTransform>
+                                        </Path>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+
+                    </controls:DropDownButton.Content>
+                </controls:DropDownButton>
+
+            </StackPanel>
+
+        </Grid>
     </Grid>
 
 </controls:MetroWindow>

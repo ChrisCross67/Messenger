@@ -121,13 +121,13 @@ namespace Messenger.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BaseDark")]
-        public string AppTheme {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsDarkTheme {
             get {
-                return ((string)(this["AppTheme"]));
+                return ((bool)(this["IsDarkTheme"]));
             }
             set {
-                this["AppTheme"] = value;
+                this["IsDarkTheme"] = value;
             }
         }
         

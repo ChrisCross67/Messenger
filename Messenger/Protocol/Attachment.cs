@@ -48,6 +48,7 @@ namespace Messenger.Protocol
         /// The extended attributes
         /// </summary>
         public Dictionary<string, string> ExtendedAttributes;
+        string fullPath;
 
         /// <summary>
         /// Gets or sets the full path.
@@ -55,7 +56,19 @@ namespace Messenger.Protocol
         /// <value>
         /// The full path.
         /// </value>
-        public string FullPath { get; set; }
+        public string FullPath
+        {
+            get
+            {
+                return fullPath;
+            }
+
+            set
+            {
+                fullPath = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the packet no.
         /// </summary>
