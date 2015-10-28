@@ -222,4 +222,10 @@
   <data name="WriteToUser" xml:space="preserve">
     <value>Ecrire à cet utilisateur</value>
   </data>
+  <data name="HideWindow" xml:space="preserve">
+    <value>Cacher la fenêtre Messenger</value>
+  </data>
+  <data name="ShowWindow" xml:space="preserve">
+    <value>Afficher la fenêtre Messenger</value>
+  </data>
 </root>

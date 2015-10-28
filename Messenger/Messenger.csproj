@@ -65,6 +65,10 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.1.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -82,6 +86,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -141,6 +146,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Notification\UsersNotifyIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OptionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,6 +167,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Locator\LocalizationHelper.cs" />
     <Compile Include="Locator\ViewModelLocator.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -168,6 +178,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Notification\CloseWindowCommand.cs" />
+    <Compile Include="Notification\CommandBase.cs" />
+    <Compile Include="Notification\HideWindowCommand.cs" />
+    <Compile Include="Notification\ShowWindowCommand.cs" />
+    <Compile Include="Notification\UsersNotifyIcon.xaml.cs">
+      <DependentUpon>UsersNotifyIcon.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Themes\ThemeSelectionViewModel.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\Bindingbase.cs" />
@@ -260,6 +278,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messenger.Dialogs\Messenger.Dialogs.csproj">
+      <Project>{28ff91ab-e5dc-47ca-997f-b8bcdce887ff}</Project>
+      <Name>Messenger.Dialogs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

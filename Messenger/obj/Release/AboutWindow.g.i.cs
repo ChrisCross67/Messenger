@@ -10,9 +10,6 @@
 //------------------------------------------------------------------------------
 
 using MahApps.Metro.Controls;
-using MaterialDesignColors;
-using Messenger.Properties;
-using Messenger.Themes;
 using System;
 using System.Diagnostics;
 using System.Windows;

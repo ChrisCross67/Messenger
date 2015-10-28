@@ -46,14 +46,14 @@
 
         <TextBlock Grid.Row="0"
                    Grid.Column="0"
-                   VerticalAlignment="Top"
+                   VerticalAlignment="Center"
                    Text="{Binding Source={StaticResource Locator},
                                   Path=LocalizationHelper.[Resources.Language],
                                   StringFormat={}{0} :}" />
         <ComboBox Grid.Row="0"
                   Grid.Column="1"
                   HorizontalAlignment="Left"
-                  VerticalAlignment="Top"
+                  VerticalAlignment="Center"
                   DataContext="{Binding Source={x:Static locator:ViewModelLocator.Instance},
                                             Path=.,
                                             UpdateSourceTrigger=PropertyChanged}"
@@ -71,7 +71,7 @@
                                    Source="{Binding Path=Key,
                                                     Converter={StaticResource ToFlag}}" />
                         <TextBlock Margin="5,0,0,0"
-                                       Foreground="Black"
+                                       Foreground="{DynamicResource TextBrush}"
                                        Text="{Binding Path=Value}" />
                     </WrapPanel>
                 </DataTemplate>

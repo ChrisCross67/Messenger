@@ -1,4 +1,5 @@
-﻿using Messenger.Extensions;
+﻿using Messenger.Dialogs;
+using Messenger.Extensions;
 using Messenger.Properties;
 using Messenger.Protocol;
 using Messenger.Utils;
@@ -23,6 +24,7 @@ namespace Messenger
         {
             InitializeComponent();
         }
+        private static readonly NotifyMessageManager MessengerPopup = new NotifyMessageManager();
 
         private bool fileReceived = false;
 
@@ -48,6 +50,9 @@ namespace Messenger
                 if (context == null)
                     return;
                 context.Messages.CollectionChanged += messageWindow.OnMessageAppened;
+                var currentMember = MainViewModel.Instance.Members
+                        .FirstOrDefault(user => user.IPAddress.ToString().Equals(context.Member.IPAddress.ToString()));
+                currentMember.IsChatting = false;
             }
             if (e.OldValue != null)
             {
@@ -60,6 +65,12 @@ namespace Messenger
 
         private void OnMessageAppened(object sender, NotifyCollectionChangedEventArgs e)
         {
+            var newMessage = e.NewItems[0] as Message;
+            if (newMessage == null)
+                return;
+            if (string.IsNullOrEmpty(newMessage.SenderHost))
+                return;
+            MessengerPopup.SendMessage(new NotifyMessage(MessageContext.Member.UserName, newMessage.Content));
         }
 
         private void CloseWindow()
@@ -69,6 +80,9 @@ namespace Messenger
                 if (!fileReceived)
                     Messager.DropFiles(message);
             }
+            var currentMember = MainViewModel.Instance.Members
+                .FirstOrDefault(user => user.IPAddress.ToString().Equals(MessageContext.Member.IPAddress.ToString()));
+            currentMember.IsChatting = false;
         }
 
         private void buttonAttach_Click(object sender, RoutedEventArgs e)

@@ -169,6 +169,15 @@ namespace Messenger.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Hide the Messenger window.
+        /// </summary>
+        internal static string HideWindow {
+            get {
+                return ResourceManager.GetString("HideWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Ignore All.
         /// </summary>
         internal static string IgnoreAll {
@@ -309,6 +318,15 @@ namespace Messenger.Properties {
         internal static string SetupOptions {
             get {
                 return ResourceManager.GetString("SetupOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Show the Messenger window.
+        /// </summary>
+        internal static string ShowWindow {
+            get {
+                return ResourceManager.GetString("ShowWindow", resourceCulture);
             }
         }
         

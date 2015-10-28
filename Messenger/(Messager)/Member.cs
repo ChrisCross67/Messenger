@@ -81,5 +81,21 @@ namespace Messenger
                 OnPropertyChanged();
             }
         }
+
+        public bool IsChatting
+        {
+            get
+            {
+                return _isChatting;
+            }
+
+            set
+            {
+                _isChatting = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isChatting;
     }
 }

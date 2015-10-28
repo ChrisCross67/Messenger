@@ -219,4 +219,10 @@
   <data name="WriteToUser" xml:space="preserve">
     <value>Write to this user</value>
   </data>
+  <data name="HideWindow" xml:space="preserve">
+    <value>Hide the Messenger window</value>
+  </data>
+  <data name="ShowWindow" xml:space="preserve">
+    <value>Show the Messenger window</value>
+  </data>
 </root>

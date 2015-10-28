@@ -74,5 +74,18 @@ namespace Messenger
                 return data;
             }
         }
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            try
+            {
+                MainWindow app = new MainWindow();
+                app.Show();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

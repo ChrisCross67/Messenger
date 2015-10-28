@@ -1,0 +1,2 @@
+- Create system tray 
+- Just show the hour on message and on show the current day each new days

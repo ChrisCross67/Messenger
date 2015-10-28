@@ -3,8 +3,11 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:converter="clr-namespace:Messenger.Converters"
+                      xmlns:ie="http://schemas.microsoft.com/expression/2010/interactivity"
                       xmlns:local="clr-namespace:Messenger"
+                      xmlns:notification="clr-namespace:Messenger.Notification"
                       xmlns:system="clr-namespace:System;assembly=mscorlib"
+                      xmlns:tb="http://www.hardcodet.net/taskbar"
                       xmlns:themes="clr-namespace:Messenger.Themes"
                       xmlns:utils="clr-namespace:Messenger.Utils"
                       xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
@@ -17,10 +20,11 @@
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       Icon="/Messenger;component/Icons/Conference-Call.png"
                       Loaded="Window_Loaded"
+                      ShowInTaskbar="True"
                       WindowStartupLocation="CenterScreen"
                       WindowTransitionsEnabled="False">
     <controls:MetroWindow.Resources>
-
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
         <Style x:Key="toolbarLabel"
                BasedOn="{StaticResource {x:Type TextBlock}}"
                TargetType="{x:Type TextBlock}">
@@ -28,11 +32,48 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
+
+        <ContextMenu x:Key="tbMenu" x:Shared="false">
+
+            <MenuItem Command="{notification:ShowWindowCommand}"
+                      CommandParameter="{Binding}"
+                      Header="{Binding Source={StaticResource Locator},
+                                       Path=LocalizationHelper.[Resources.ShowWindow]}">
+                <MenuItem.Icon>
+                    <Path Width="16"
+                          Height="16"
+                          Margin="0,0,0,0"
+                          Data="M13.068723,6.3391984C10.02902,7.8790036 7.4492722,9.9387431 5.6594467,11.588534 8.9291277,14.598154 14.83855,19.027594 21.327917,19.027594 27.817283,19.027594 33.736705,14.598154 36.996387,11.588534 35.21656,9.9387431 32.626813,7.8790036 29.597109,6.3391984 29.837086,7.0291111 29.967073,7.74902 29.967073,8.508924 29.967073,12.668398 26.097451,16.037971 21.327917,16.037971 16.558382,16.037971 12.698759,12.668398 12.698759,8.508924 12.698759,7.74902 12.828746,7.0291111 13.068723,6.3391984z M21.327917,0C33.106767,0 42.665833,11.588534 42.665833,11.588534 42.665833,11.588534 33.106767,23.177069 21.327917,23.177069 9.5490665,23.177069 0,11.588534 0,11.588534 0,11.588534 9.5490665,0 21.327917,0z"
+                          Fill="{DynamicResource AccentColorBrush}"
+                          RenderTransformOrigin="0.5,0.5"
+                          Stretch="Uniform" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <MenuItem Command="{notification:HideWindowCommand}"
+                      CommandParameter="{Binding}"
+                      Header="{Binding Source={StaticResource Locator},
+                                       Path=LocalizationHelper.[Resources.HideWindow]}">
+                <MenuItem.Icon>
+                    <Path Width="16"
+                          Height="16"
+                          Margin="0,0,0,0"
+                          Data="M31.687237,10.667C38.231297,14.096666 42.666001,19.463814 42.666001,19.463814 42.666001,19.463814 33.114207,31.052 21.333262,31.052 19.11721,31.052 16.981756,30.641903 14.974,29.97641L17.968835,26.516945C19.064911,26.760542 20.189886,26.903641 21.333262,26.903641 27.822621,26.903641 33.739193,22.471584 37.004723,19.463814 35.21846,17.82023 32.632517,15.76165 29.602583,14.222665 29.836977,14.907658 29.968575,15.631751 29.968575,16.382744 29.968575,20.541902 26.101458,23.913969 21.333262,23.913969 20.97387,23.913969 20.622277,23.889471 20.275885,23.851471L28.911198,13.874968z M21.333649,7.8749999C22.367567,7.8749999,23.375384,7.991208,24.369999,8.1538057L23.543387,9.1103305 23.544586,9.1103305 13.919428,20.229303C13.148615,19.102821 12.698008,17.790342 12.698008,16.382666 12.698008,15.627777 12.82831,14.901288 13.065114,14.213799 10.031464,15.749875 7.4478719,17.817741 5.6614729,19.463716 7.0313649,20.726396 8.8751452,22.238071 11.028781,23.570051L8.3228858,26.695002C3.2681233,23.407453 -2.3841858E-07,19.463716 0,19.463716 -2.3841858E-07,19.463716 9.5521562,7.8749999 21.333649,7.8749999z M34.252037,0L36.449997,1.9038253 6.0807195,36.990002 3.8829998,35.089188z"
+                          Fill="{DynamicResource AccentColorBrush}"
+                          RenderTransformOrigin="0.5,0.5"
+                          Stretch="Uniform" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+
     </controls:MetroWindow.Resources>
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button VerticalAlignment="Center"
-                    Click="buttonRefresh_Click"
+                    Command="{Binding Source={x:Static local:MainViewModel.Instance},Path=RefreshMembersCommand}"
+                    CommandParameter="{Binding}"
                     Foreground="White"
                     ToolTip="{Binding Source={StaticResource Locator},
                                       Path=LocalizationHelper.[Resources.RefreshUsers]}">
@@ -66,7 +107,9 @@
 
             <Separator />
             <Button VerticalAlignment="Center"
-                    Click="buttonOption_Click"
+                    Command="{Binding Source={x:Static local:MainViewModel.Instance},
+                                      Path=OptionCommand}"
+                    CommandParameter="{Binding}"
                     Foreground="White"
                     ToolTip="{Binding Source={StaticResource Locator},
                                       Path=LocalizationHelper.[Resources.SetupOptions]}">
@@ -130,7 +173,9 @@
                 </Rectangle>
             </Button>
             <Button VerticalAlignment="Center"
-                    Click="buttonAbout_Click"
+                    Command="{Binding Source={x:Static local:MainViewModel.Instance},
+                                      Path=AboutCommand}"
+                    CommandParameter="{Binding}"
                     Foreground="White"
                     ToolTip="{Binding Source={StaticResource Locator},
                                       Path=LocalizationHelper.[Resources.About]}">
@@ -177,18 +222,41 @@
     </controls:MetroWindow.Flyouts>
 
     <DockPanel LastChildFill="True">
+        <tb:TaskbarIcon x:Name="tb"
+                        VerticalAlignment="Top"
+                        ContextMenu="{StaticResource tbMenu}"
+                        DoubleClickCommand="{notification:ShowWindowCommand}"
+                        DoubleClickCommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                        IconSource="/Messenger;component/Icons/Conference-Call.Purple.ico"
+                        MenuActivation="RightClick"
+                        PopupActivation="LeftClick"
+                        ToolTipText="Messenger"
+                        Visibility="Visible">
+
+            <tb:TaskbarIcon.TrayPopup>
+                <!--  the control will be put into a popup with an explicit DataContext  -->
+                <notification:UsersNotifyIcon />
+            </tb:TaskbarIcon.TrayPopup>
+
+            <!--<tb:TaskbarIcon.TrayToolTip>
+                <local:FancyToolTip InfoText="{Binding Path=ToolTipText}" Opacity="0.85" />
+            </tb:TaskbarIcon.TrayToolTip>-->
+
+        </tb:TaskbarIcon>
+
         <WrapPanel Height="32"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    DockPanel.Dock="Top">
             <TextBlock Style="{StaticResource toolbarLabel}" Text="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.NetworkInterface], StringFormat={}{0} :}" />
             <ComboBox Width="120"
-                      Height="28" VerticalContentAlignment="Center"
+                      Height="28"
+                      VerticalContentAlignment="Center"
                       DropDownOpened="OnComboBoxDropDownOpened"
-                      ItemsSource="{Binding ElementName=This,
+                      ItemContainerStyle="{StaticResource MaterialDesignComboBoxItemStyle}"
+                      ItemsSource="{Binding Source={x:Static local:MainViewModel.Instance},
                                             Path=Networks,
                                             UpdateSourceTrigger=PropertyChanged}"
-                      ItemContainerStyle="{StaticResource MaterialDesignComboBoxItemStyle}"
                       SelectedIndex="0"
                       SelectionChanged="OnComboBoxSelectionChanged" />
             <Rectangle Width="2"
@@ -200,20 +268,25 @@
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0} : {1}">
                         <Binding Path="LocalizationHelper.[Resources.NumberOfUsers]" Source="{StaticResource Locator}" />
-                        <Binding ElementName="This" Path="Members.Count" />
+                        <Binding Path="Members.Count" Source="{x:Static local:MainViewModel.Instance}" />
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
 
         </WrapPanel>
-        <ListBox Grid.Row="0"
+        <ListBox x:Name="ListBoxMemebers"
+                 Grid.Row="0"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 ItemsSource="{Binding ElementName=This,
+                 ItemsSource="{Binding Source={x:Static local:MainViewModel.Instance},
                                        Path=Members,
                                        UpdateSourceTrigger=PropertyChanged}"
-                 PreviewMouseDoubleClick="OnUserGridDoubleClicked"
                  Style="{StaticResource MaterialDesignCardsListBox}">
+            <ie:Interaction.Triggers>
+                <ie:EventTrigger EventName="PreviewMouseDoubleClick">
+                    <ie:InvokeCommandAction Command="{Binding Source={x:Static local:MainViewModel.Instance}, Path=OpenUserMessengerWindowCommand}" CommandParameter="{Binding ElementName=ListBoxMemebers, Path=.}" />
+                </ie:EventTrigger>
+            </ie:Interaction.Triggers>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type system:DateTime}">
                     <Grid Width="200"
@@ -228,6 +301,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
+                        <!--  Click="OnUserGridClicked"  -->
 
                         <Button Grid.RowSpan="1"
                                 Grid.ColumnSpan="2"
@@ -235,9 +309,12 @@
                                 Height="30"
                                 HorizontalAlignment="Right"
                                 Panel.ZIndex="3"
-                                Click="OnUserGridClicked"
-                                ToolTip="{Binding Source={StaticResource Locator},Path=LocalizationHelper.[Resources.WriteToUser]}"
-                                Style="{StaticResource MaterialDesignFloatingActionDarkButton}">
+                                Command="{Binding Source={x:Static local:MainViewModel.Instance},
+                                                  Path=OpenUserMessengerWindowCommand}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
+                                ToolTip="{Binding Source={StaticResource Locator},
+                                                  Path=LocalizationHelper.[Resources.WriteToUser]}">
                             <Viewbox Width="18" Height="18">
                                 <Path HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
