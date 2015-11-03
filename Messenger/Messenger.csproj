@@ -86,22 +86,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="PresentationFramework.Aero">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework.Classic">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework.Luna">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework.Royale">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -130,6 +117,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Dialogs\NotifyMessageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +148,16 @@
     <Compile Include="%28Messager%29\MessageItemTemplateSelector.cs" />
     <Compile Include="%28Messager%29\MessagerModel.cs" />
     <Compile Include="%28Messager%29\MessagerViewModel.cs" />
+    <Compile Include="Dialogs\AnimatedLocation.cs" />
+    <Compile Include="Dialogs\DelegateCommand.cs" />
+    <Compile Include="Dialogs\MessageType.cs" />
+    <Compile Include="Dialogs\NotifyMessage.cs" />
+    <Compile Include="Dialogs\NotifyMessageManager.cs" />
+    <Compile Include="Dialogs\NotifyMessageViewModel.cs" />
+    <Compile Include="Dialogs\NotifyMessageWindow.xaml.cs">
+      <DependentUpon>NotifyMessageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Screen.cs" />
     <Compile Include="AboutWindow.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -278,12 +279,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\remove.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Messenger.Dialogs\Messenger.Dialogs.csproj">
-      <Project>{28ff91ab-e5dc-47ca-997f-b8bcdce887ff}</Project>
-      <Name>Messenger.Dialogs</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -155,11 +155,18 @@ namespace Messenger
 
         private static void RemoveMember(Message message)
         {
-            UIDispatcher.Invoke(new Action(delegate
+            try
             {
-                Members.RemoveMember(message.SenderIP.Address);
+                UIDispatcher.Invoke(new Action(delegate
+                {
+                    Members.RemoveMember(message.SenderIP.Address);
+                }
+                ));
             }
-            ));
+            catch (Exception)
+            {
+
+            }
         }
 
         public static Member GetMember(Message message)
@@ -361,7 +368,7 @@ namespace Messenger
 
             UIDispatcher.Invoke(new Action(delegate
             {
-                var receivedMessage = GetWindowOpen<MessageWindow>(message.SenderName);
+                var receivedMessage = GetWindowOpen<MessageWindow>(message.SenderIP.Address.ToString());
                 message.Date = DateTime.Now;
                 if (receivedMessage == null)
                 {
@@ -376,7 +383,7 @@ namespace Messenger
                     receivedMessage.MessageContext = messager;
                     //if (!string.IsNullOrEmpty(message.Content))
                     //    receivedMessage.MessageContext.Messages.Add(message);
-                    receivedMessage.Tag = message.SenderName;
+                    receivedMessage.Tag = message.SenderIP.Address.ToString();
                     receivedMessage.Show();
                     if (Properties.Settings.Default.ActivateComingMessage)
                     {

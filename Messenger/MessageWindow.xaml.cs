@@ -70,7 +70,8 @@ namespace Messenger
                 return;
             if (string.IsNullOrEmpty(newMessage.SenderHost))
                 return;
-            MessengerPopup.SendMessage(new NotifyMessage(MessageContext.Member.UserName, newMessage.Content));
+            var popup = new NotifyMessage(MessageContext.Member.UserName, newMessage.Content);
+            MessengerPopup.SendMessage(popup);
         }
 
         private void CloseWindow()

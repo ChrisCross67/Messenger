@@ -25,13 +25,21 @@
         <converter:FileIconConverter x:Key="FileIconConverter" />
         <converter:FileSizeConverter x:Key="FileSizeConverter" />
 
-
-
-
         <x:Array x:Key="MenuItemAttach" Type="{x:Type MenuItem}">
             <MenuItem Click="buttonAttach_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFile]}" />
             <MenuItem Click="MenuItemAttachFolder_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.AttachFolders]}" />
-            <MenuItem Click="MenuItemClear_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.ClearAll]}" />
+            <MenuItem Click="MenuItemClear_Click" Header="{Binding Source={StaticResource Locator}, Path=LocalizationHelper.[Resources.ClearAll]}">
+                <MenuItem.Style>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=Attachments.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </MenuItem.Style>
+            </MenuItem>
         </x:Array>
         <DataTemplate x:Key="AttachmentItem">
             <DockPanel LastChildFill="True">
@@ -54,7 +62,7 @@
                            HorizontalAlignment="Stretch"
                            Padding="0"
                            Text="{Binding Name}"
-                           TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
+                           TextBlock.Foreground="{DynamicResource TextBrush}" />
             </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="SendAttachmentItem">
@@ -66,13 +74,13 @@
                        Source="{Binding Path=Item.FullPath,
                                         Converter={StaticResource FileIconConverter}}"
                        Stretch="UniformToFill" />
-                <TextBlock Text="{Binding Item.Name}" TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
+                <TextBlock Text="{Binding Item.Name}" TextBlock.Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" />
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="ReceiveAttachmentItem">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding Checked}" />
-                <TextBlock Text="{Binding Item.Name}" TextBlock.Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
+                <TextBlock Text="{Binding Item.Name}" TextBlock.Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" />
             </StackPanel>
         </DataTemplate>
         <Style x:Key="AttachmentPanelStyle" TargetType="{x:Type Panel}">
@@ -91,7 +99,7 @@
                           Margin="0,2"
                           HorizontalAlignment="Left"
                           VerticalScrollBarVisibility="Auto">
-                <Border Background="{DynamicResource GrayBrush10}" CornerRadius="8">
+                <Border Background="{DynamicResource MaterialDesignDivider}" CornerRadius="8">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -266,35 +274,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!--<Popup Name="popupReceive"
-               Width="400"
-               Height="100"
-               AllowsTransparency="True"
-               Placement="Center"
-               PlacementTarget="{Binding ElementName=messageWindow}">
-                <Border Background="LightYellow"
-                    BorderBrush="Black"
-                    BorderThickness="1">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Name="labelReciveFile"
-                               Height="30"
-                               Padding="4" />
-                        <ProgressBar Name="recivedProgress"
-                                 Width="360"
-                                 Height="30"
-                                 VerticalAlignment="Bottom"
-                                 HorizontalContentAlignment="Left"
-                                 VerticalContentAlignment="Top" />
-                        <TextBlock Name="textBlockTransferSpeed"
-                               Height="30"
-                               HorizontalAlignment="Center"
-                               Padding="4" />
-                    </StackPanel>
-                </Border>
-            </Popup>-->
+
         <ScrollViewer Margin="5"
                       HorizontalAlignment="Stretch"
                       VerticalScrollBarVisibility="Auto">
@@ -311,18 +293,11 @@
                 </ItemsControl.ItemTemplateSelector>
             </ItemsControl>
         </ScrollViewer>
-        <Rectangle Grid.Row="1"
-                   Height="1"
-                   HorizontalAlignment="Stretch"
-                   Fill="{DynamicResource BlackColorBrush}" />
-        <!--<GridSplitter Name="gridSplitter2"
-                      Grid.Row="1"
-                      HorizontalAlignment="Stretch"
-                      ResizeBehavior="PreviousAndNext" />-->
+
         <Grid Name="grid2" Grid.Row="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" MaxHeight="150" />
-                <RowDefinition Height="5" />
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" MaxHeight="150" />
             </Grid.RowDefinitions>
 
@@ -330,29 +305,45 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="50" />
             </Grid.ColumnDefinitions>
-            <DockPanel Name="attachmentPanel"
+            <Rectangle Grid.Row="0"
+                   Height="1" Grid.ColumnSpan="2"
+                   HorizontalAlignment="Stretch"
+                   Fill="{DynamicResource BlackColorBrush}" />
+
+
+            <StackPanel Grid.Row="1"
+                       Grid.ColumnSpan="2">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=Attachments.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <DockPanel Name="attachmentPanel"
                        Grid.Row="0"
                        Grid.ColumnSpan="2"
-                       LastChildFill="True">
+                       LastChildFill="True" MaxHeight="150">
 
-                <ListBox Name="listBoxAttachmentList"
+                    <ListBox Name="listBoxAttachmentList"
                          Margin="1,1,5,1"
                          AllowDrop="True"
                          Drop="listBoxAttachmentList_Drop"
                          ItemTemplate="{StaticResource AttachmentItem}"
                          ItemsSource="{Binding Attachments}"
                          SizeChanged="listBoxAttachmentList_SizeChanged" />
-            </DockPanel>
 
-            <!--<GridSplitter Grid.Row="1"
-                          Grid.ColumnSpan="2"
-                          HorizontalAlignment="Stretch"
-                          ResizeBehavior="PreviousAndNext" />-->
-            <Rectangle Grid.Row="1"
-                       Grid.ColumnSpan="2"
+
+                </DockPanel>
+
+                <Rectangle Grid.Row="1" Grid.ColumnSpan="2"
                        Height="1"
                        HorizontalAlignment="Stretch"
-                       Fill="{DynamicResource BlackColorBrush}" />
+                       Fill="{DynamicResource BlackColorBrush}"/>
+            </StackPanel>
 
             <TextBox Grid.Row="2"
                      HorizontalAlignment="Stretch"
@@ -380,7 +371,7 @@
                                           Path=SendCommand}"
                         CommandParameter="{Binding ElementName=messageWindow,
                                                    Path=DataContext}"
-                        Foreground="White"
+                        Foreground="{DynamicResource BlackColorBrush}"
                         ToolTip="{Binding Source={StaticResource Locator},
                                           Path=LocalizationHelper.[Resources.Send]}">
                     <Button.Style>
@@ -423,7 +414,8 @@
 
                 <controls:DropDownButton Name="DownButton1"
                                          VerticalAlignment="Stretch"
-                                         Foreground="White"
+                                         Foreground="{DynamicResource BlackColorBrush}"
+                                         Background="{DynamicResource AccentColorBrush}"
                                          ItemsSource="{Binding Source={StaticResource MenuItemAttach},
                                                                Path=.}"
                                          ToolTip="{Binding Source={StaticResource Locator},

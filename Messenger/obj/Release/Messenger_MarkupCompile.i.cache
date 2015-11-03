@@ -10,11 +10,11 @@ none
 false
 TRACE
 C:\Users\SRA-INFO3\Documents\Visual Studio 2015\Projects\Messenger\Messenger\App.xaml
-6991862136
+7993459549
 
-52828632442
-29976953658
-AboutWindow.xaml;MainWindow.xaml;MessageWindow.xaml;Notification\UsersNotifyIcon.xaml;OptionWindow.xaml;Themes\Generic.xaml;
+60-27018703
+23-667022323
+Dialogs\NotifyMessageWindow.xaml;AboutWindow.xaml;MainWindow.xaml;MessageWindow.xaml;Notification\UsersNotifyIcon.xaml;OptionWindow.xaml;Themes\Generic.xaml;
 
-True
+False
 

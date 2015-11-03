@@ -5,6 +5,7 @@ using Messenger.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -185,6 +186,10 @@ namespace Messenger
 
                 return true;
             }
+            else if(parameter != null && Instance.Members.Any(member=>member.UserName.Equals(parameter.ToString())))
+            {
+                return true;
+            }
             else
             {
                 return true;
@@ -199,11 +204,16 @@ namespace Messenger
             member = listBox != null ? listBox.SelectedItem as Member : parameter as Member;
 
             if (member == null)
+            {
+                member = Instance.Members.FirstOrDefault(user => user.UserName.Equals(parameter.ToString()));
+            }
+
+            if (member == null)
                 return;
 
             Application.Current.Dispatcher.Invoke(new Action(delegate
             {
-                var receivedMessage = Messager.GetWindowOpen<MessageWindow>(member.UserName);
+                var receivedMessage = Messager.GetWindowOpen<MessageWindow>(member.IPAddress.ToString());
                 if (receivedMessage == null)
                 {
                     var messager = new MessagerModel
@@ -214,7 +224,7 @@ namespace Messenger
                     MessagerViewModel.Instance.Messagers.Add(messager);
                     receivedMessage = new MessageWindow();
                     receivedMessage.DataContext = messager;
-                    receivedMessage.Tag = member.UserName;
+                    receivedMessage.Tag = member.IPAddress.ToString();
                     receivedMessage.MessageContext = messager;
                     receivedMessage.Show();
                     if (Settings.Default.ActivateComingMessage)
@@ -223,7 +233,12 @@ namespace Messenger
                     }
                 }
                 else
+                {
+                    if (receivedMessage.WindowState == WindowState.Minimized)
+                        receivedMessage.WindowState = WindowState.Normal;
                     receivedMessage.Activate();
+                }
+
             }));
         }
         #endregion
